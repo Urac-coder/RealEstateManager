@@ -18,6 +18,9 @@ import com.bumptech.glide.Glide
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
+import android.content.Intent
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport
+import com.openclassrooms.realestatemanager.utils.toast
 
 
 class MainFragment : Fragment(){
@@ -38,6 +41,7 @@ class MainFragment : Fragment(){
         configureViewModel()
         getAllProperty()
         configureRecyclerView()
+        configureOnClickRecyclerView()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -59,8 +63,16 @@ class MainFragment : Fragment(){
         this.main_fragment_recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun updateItemsList(propertys: List<Property>) {
-        this.adapter.updateData(propertys)
+    private fun configureOnClickRecyclerView() {
+        ItemClickSupport.addTo(main_fragment_recyclerView, R.layout.fragment_main)
+                .setOnItemClickListener { recyclerView, position, v ->
+                    val response = adapter.getProperty(position)
+                    context!!.toast(response.id.toString())
+                }
+    }
+
+    private fun updateItemsList(properties: List<Property>) {
+        this.adapter.updateData(properties)
     }
 
     // ---------------------

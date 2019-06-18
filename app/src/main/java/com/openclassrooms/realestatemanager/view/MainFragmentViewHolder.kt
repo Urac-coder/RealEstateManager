@@ -15,14 +15,22 @@ import java.lang.ref.WeakReference
 import kotlinx.android.synthetic.main.fragment_main_item.*
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import androidx.core.app.NotificationCompat.getCategory
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_main_item.view.*
+import java.text.DecimalFormat
 
 class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    val test = view.main_fragment_txt
+    private val view: View = view
+    val decimalFormat = DecimalFormat("#,###,##")
 
     fun updateWithProperty(property: Property) {
 
-        test.text = property.description
+        var price = "$" + decimalFormat.format(property.price)
+
+        view.main_fragment_type.text = property.type
+        view.main_fragment_city.text = property.city
+        view.main_fragment_price.text = price
+        Glide.with(itemView).load(property.photoUrl).into(view.main_fragment_item_pic)
     }
 }

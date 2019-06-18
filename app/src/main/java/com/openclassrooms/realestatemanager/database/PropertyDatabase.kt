@@ -57,6 +57,7 @@ abstract class PropertyDatabase : RoomDatabase() {
                     contentValues.put("description", "Super petite maison")
                     contentValues.put("photoUrl", "https://media-cdn.tripadvisor.com/media/photo-s/08/b9/80/bf/angurukaramulla-temple.jpg")
                     contentValues.put("address", "34 route du pont")
+                    contentValues.put("city", "Paris")
                     contentValues.put("pointOfInterest", "Ecole, carrefour, auchan")
                     contentValues.put("statusAvailable", false)
                     contentValues.put("entryDate", "12/04/1959")

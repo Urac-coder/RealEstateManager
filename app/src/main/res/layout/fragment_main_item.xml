@@ -1,21 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/border">
-    
-    <ImageView
-        android:id="@+id/fragment_main_item_picture"
-        android:layout_width="100dp"
-        android:layout_height="100dp" />
+    android:background="@drawable/border_recyclerview"
+    android:layout_margin="5dp"
+    android:elevation="5dp">
 
-    <TextView
-        android:id="@+id/main_fragment_txt"
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/main_fragment_item_cardView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/fragment_main_item_picture"
-        android:text="Title"/>
+        app:cardCornerRadius="2dp"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/main_fragment_item_pic"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            />
+
+    </androidx.cardview.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/main_fragment_item_cardView"
+        android:layout_centerVertical="true"
+        >
+
+        <TextView
+            android:id="@+id/main_fragment_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="Type"/>
+
+        <TextView
+            android:id="@+id/main_fragment_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textSize="18dp"
+            android:layout_below="@+id/main_fragment_type"
+            android:text="City"/>
+
+        <TextView
+            android:id="@+id/main_fragment_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="25dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_below="@+id/main_fragment_city"
+            android:text="$29,987,000"/>
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
