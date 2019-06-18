@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+    <string name="propertyType">choose the type of property</string>
+
+    <string-array name="property_type">
+        <item>Property type</item>
+        <item>Loft</item>
+        <item>Manor</item>
+        <item>House</item>
+        <item>Residence</item>
+        <item>Hotel</item>
+        <item>Flat</item>
+        <item>Duplex</item>
+    </string-array>
+
+</resources>

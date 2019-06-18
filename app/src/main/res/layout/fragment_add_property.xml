@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/add_property_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/add_property_tittle_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Select type of property"/>
+
+            <Spinner
+                android:id="@+id/add_property_spinner_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:layout_below="@id/add_property_tittle_type"
+                android:entries="@array/property_type"
+                android:background="@drawable/border"
+                android:prompt="@string/propertyType"/>
+
+            <TextView
+                android:id="@+id/add_property_title_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_spinner_type"
+                android:text="Price ($)"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_price"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="140 000"
+                android:inputType="number"
+                />
+
+            <TextView
+                android:id="@+id/add_property_title_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_price"
+                android:text="Surface of the property (m2)"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_surface"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="80..."
+                android:inputType="number"
+                />
+
+            <TextView
+                android:id="@+id/add_property_title_roomNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_surface"
+                android:text="Number of room"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_roomNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_roomNumber"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="12..."
+                android:inputType="number"
+                />
+
+            <TextView
+                android:id="@+id/add_property_title_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_roomNumber"
+                android:text="Description of the property"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_description"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@+id/add_property_title_description"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:gravity="start"/>
+
+            <TextView
+                android:id="@+id/add_property_title_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_description"
+                android:text="Add picture of your property"/>
+
+            <Button
+                android:id="@+id/add_property_btn_importPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/add_property_title_picture"
+                android:text="Import picture"
+                android:padding="10dp"
+                android:background="@drawable/border"/>
+
+            <Button
+                android:id="@+id/add_property_btn_takePicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/add_property_btn_importPicture"
+                android:layout_below="@id/add_property_title_picture"
+                android:text="Take picture"
+                android:padding="5dp"
+                android:background="@drawable/border"/>
+
+            <TextView
+                android:id="@+id/add_property_title_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_btn_importPicture"
+                android:text="Enter the address"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_address"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="47 rue du pont, Paris"/>
+
+            <TextView
+                android:id="@+id/add_property_title_pointOfInterest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_address"
+                android:text="Enter the point of interest"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_pointOfInterest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_pointOfInterest"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="Ecole, carrefour, parc..."/>
+
+            <TextView
+                android:id="@+id/add_property_title_realEstateAgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_pointOfInterest"
+                android:text="Real estate agent"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_realEstateAgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_realEstateAgent"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="stephane plaza..."/>
+
+            <Button
+                android:id="@+id/add_property_btn_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_editText_realEstateAgent"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="SAVE PROPERTY"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:textColor="@android:color/white"
+                android:background="@drawable/border_btn"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
