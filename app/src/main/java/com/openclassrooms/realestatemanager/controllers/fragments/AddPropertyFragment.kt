@@ -19,6 +19,7 @@ import androidx.annotation.Nullable
 import androidx.lifecycle.Observer
 import android.Manifest.permission
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.app.Activity.RESULT_CANCELED
 import android.net.Uri
 import android.widget.Toast
 import com.bumptech.glide.request.RequestOptions
@@ -28,6 +29,9 @@ import pub.devrel.easypermissions.EasyPermissions
 import android.app.Activity.RESULT_OK
 import android.provider.MediaStore
 import android.view.Menu
+import com.openclassrooms.realestatemanager.models.Picture
+import com.openclassrooms.realestatemanager.utils.longToast
+import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions.hasPermissions
 
 class AddPropertyFragment : Fragment(){
@@ -40,7 +44,8 @@ class AddPropertyFragment : Fragment(){
     private val RC_PICTURE_PERMS = 100
     private val RC_CHOOSE_PHOTO = 200
     private var uriPictureSelected: Uri? = null
-
+    private lateinit var picture: Picture
+    var pictureList: MutableList<Picture> = mutableListOf<Picture>()
 
     companion object {
         fun newInstance(): AddPropertyFragment {
@@ -57,11 +62,15 @@ class AddPropertyFragment : Fragment(){
             if(allComplete()){
                 insertProperty()
                 launchMainFragment()
+                context!!.longToast("Congratulations you have successfully registered a new property")
+                context!!.longToast("Congratulations you have successfully registered a new property")
             } else { context?.toast("You must first select all fields") }
         }
 
         add_property_btn_importPicture.setOnClickListener{
             this.choosePictureFromPhone()
+            picture = Picture(uriPictureSelected.toString(), "Salle de baim")
+            pictureList.add(picture)
         }
     }
 
@@ -80,7 +89,9 @@ class AddPropertyFragment : Fragment(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        this.handleResponse(requestCode, resultCode, data!!)
+        if (data != null){
+            this.handleResponse(requestCode, resultCode, data!!)
+        }
     }
 
     // -------------------
@@ -113,16 +124,17 @@ class AddPropertyFragment : Fragment(){
     // ---------------------
 
     private fun insertProperty(){
-        property = Property(
-                add_property_editText_id.text.toString().toLong(),
+        property = Property(0,
                 add_property_spinner_type.selectedItem.toString(),
                 add_property_editText_price.text.toString().toInt(),
                 add_property_editText_surface.text.toString().toInt(),
                 add_property_editText_roomNumber.text.toString().toInt(),
+                add_property_editText_bedrooms.text.toString().toInt(),
                 add_property_editText_description.text.toString(),
                 uriPictureSelected.toString(),
                 add_property_editText_address.text.toString(),
                 add_property_editText_city.text.toString(),
+                add_property_editText_zipCode.text.toString().toInt(),
                 add_property_editText_pointOfInterest.text.toString(), true, "00/00/0000", "00/00/0000",
                 add_property_editText_realEstateAgent.text.toString())
 
@@ -133,9 +145,10 @@ class AddPropertyFragment : Fragment(){
         var allComplete = false
 
         if (add_property_spinner_type.selectedItem.toString() != "Property type" && !add_property_editText_price.text.isEmpty() &&
-                !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() &&
+                !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() && !add_property_editText_bedrooms.text.isEmpty() &&
                 !add_property_editText_description.text.isEmpty() && uriPictureSelected != null && !add_property_editText_address.text.isEmpty() &&
-                !add_property_editText_pointOfInterest.text.isEmpty() && !add_property_editText_realEstateAgent.text.isEmpty()) {
+                !add_property_editText_zipCode.text.isEmpty() && !add_property_editText_pointOfInterest.text.isEmpty() &&
+                !add_property_editText_realEstateAgent.text.isEmpty()) {
             allComplete = true
         }
         return allComplete

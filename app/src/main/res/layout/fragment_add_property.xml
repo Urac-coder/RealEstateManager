@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -35,19 +36,6 @@
                 android:background="@drawable/border"
                 android:prompt="@string/propertyType"/>
 
-            <EditText
-                android:id="@+id/add_property_editText_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/add_property_spinner_type"
-                android:layout_below="@+id/add_property_title_type"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/border"
-                android:padding="10dp"
-                android:hint="1"
-                />
-
             <TextView
                 android:id="@+id/add_property_title_price"
                 android:layout_width="wrap_content"
@@ -69,6 +57,7 @@
                 android:padding="10dp"
                 android:hint="140 000"
                 android:inputType="number"
+
                 />
 
             <TextView
@@ -118,7 +107,7 @@
                 />
 
             <TextView
-                android:id="@+id/add_property_title_description"
+                android:id="@+id/add_property_title_bedrooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
@@ -126,6 +115,29 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_roomNumber"
+                android:text="Number of room"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_bedrooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_bedrooms"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="3"
+                android:inputType="number"
+                />
+
+            <TextView
+                android:id="@+id/add_property_title_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_bedrooms"
                 android:text="Description of the property"/>
 
             <EditText
@@ -136,7 +148,9 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:gravity="start"/>
+                android:gravity="start"
+                android:inputType="textCapSentences"
+                />
 
             <TextView
                 android:id="@+id/add_property_title_picture"
@@ -149,17 +163,18 @@
                 android:layout_below="@id/add_property_editText_description"
                 android:text="Add picture of your property"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/add_property_btn_importPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/add_property_title_picture"
                 android:text="Import picture"
-                android:padding="10dp"
+                android:padding="20dp"
+                app:srcCompat="@drawable/ic_add_picture_storage"
                 android:background="@drawable/border"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/add_property_btn_takePicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -168,17 +183,19 @@
                 android:layout_toRightOf="@id/add_property_btn_importPicture"
                 android:layout_below="@id/add_property_title_picture"
                 android:text="Take picture"
-                android:padding="5dp"
+                android:padding="20dp"
+                app:srcCompat="@drawable/ic_add_picture_camera"
                 android:background="@drawable/border"/>
 
             <ImageView
                 android:id="@+id/add_property_display_pic"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
                 android:scaleType="centerCrop"
-                android:layout_below="@+id/add_property_btn_takePicture"/>
+                android:layout_below="@+id/add_property_btn_takePicture"
+                app:srcCompat="@drawable/ic_picture"
+                android:background="@drawable/border"/>
 
             <TextView
                 android:id="@+id/add_property_title_address"
@@ -199,7 +216,9 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="47 rue du pont"/>
+                android:hint="47 rue du pont"
+                android:inputType="textCapSentences"
+                />
 
             <TextView
                 android:id="@+id/add_property_title_city"
@@ -220,7 +239,32 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="Paris"/>
+                android:hint="Paris"
+                android:inputType="textCapWords"
+                />
+
+            <TextView
+                android:id="@+id/add_property_title_zipCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_below="@id/add_property_editText_city"
+                android:text="Enter the zip code"/>
+
+            <EditText
+                android:id="@+id/add_property_editText_zipCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_property_title_zipCode"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border"
+                android:padding="10dp"
+                android:hint="62100"
+                android:inputType="textCapWords"
+                />
 
             <TextView
                 android:id="@+id/add_property_title_pointOfInterest"
@@ -230,7 +274,7 @@
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_below="@id/add_property_editText_city"
+                android:layout_below="@id/add_property_editText_zipCode"
                 android:text="Enter the point of interest"/>
 
             <EditText
@@ -241,7 +285,9 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="Ecole, carrefour, parc..."/>
+                android:hint="Ecole, carrefour, parc..."
+                android:inputType="textCapWords"
+                />
 
             <TextView
                 android:id="@+id/add_property_title_realEstateAgent"
@@ -262,7 +308,9 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="stephane plaza"/>
+                android:hint="stephane plaza"
+                android:inputType="textCapWords"
+                />
 
             <Button
                 android:id="@+id/add_property_btn_save"

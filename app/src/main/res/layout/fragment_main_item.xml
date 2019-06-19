@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/border_recyclerview"
     android:layout_margin="5dp"
@@ -11,16 +11,16 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/main_fragment_item_cardView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="2dp"
-        android:layout_margin="5dp">
+        >
 
         <ImageView
             android:id="@+id/main_fragment_item_pic"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/specimen"
             />
 
     </androidx.cardview.widget.CardView>
@@ -28,18 +28,28 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/main_fragment_item_cardView"
+        android:layout_below="@+id/main_fragment_item_cardView"
         android:layout_centerVertical="true"
+        android:layout_margin="10dp"
         >
 
         <TextView
-            android:id="@+id/main_fragment_type"
+            android:id="@+id/main_fragment_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimary"
+            android:text="$29,987,000"/>
+
+        <TextView
+            android:id="@+id/main_fragment_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_fragment_price"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:textSize="18dp"
-            android:textStyle="bold"
             android:textColor="@android:color/black"
             android:text="Type"/>
 
@@ -49,18 +59,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:textSize="18dp"
-            android:layout_below="@+id/main_fragment_type"
-            android:text="City"/>
+            android:layout_below="@+id/main_fragment_info"
+            android:text="City"
+            android:layout_marginBottom="10dp"/>
 
-        <TextView
-            android:id="@+id/main_fragment_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:textSize="25dp"
-            android:textColor="@color/colorPrimary"
-            android:layout_below="@+id/main_fragment_city"
-            android:text="$29,987,000"/>
+
 
     </RelativeLayout>
 

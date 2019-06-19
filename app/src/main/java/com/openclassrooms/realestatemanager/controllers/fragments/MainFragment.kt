@@ -21,12 +21,12 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import android.content.Intent
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport
 import com.openclassrooms.realestatemanager.utils.toast
-
+import android.R.attr.key
 
 class MainFragment : Fragment(){
 
     lateinit var adapter: MainFragmentAdapter
-    var propertyList = listOf<Property>()
+    //var propertyList = listOf<Property>()
     lateinit var propertyViewModel: PropertyViewModel
 
     companion object {
@@ -67,7 +67,7 @@ class MainFragment : Fragment(){
         ItemClickSupport.addTo(main_fragment_recyclerView, R.layout.fragment_main)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getProperty(position)
-                    context!!.toast(response.id.toString())
+                    launchDisplayPropertyFragment(response.id.toString().toLong())
                 }
     }
 
@@ -81,5 +81,16 @@ class MainFragment : Fragment(){
 
     private fun getAllProperty() {
         this.propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> {propertyList  -> updateItemsList(propertyList) })
+    }
+
+    private fun launchDisplayPropertyFragment(propertyId: Long) {
+        val fragment = DisplayPropertyFragment()
+        val bundle = Bundle()
+        bundle.putLong("PROPERTY_ID", propertyId)
+        fragment.arguments = bundle
+        activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_activity_frame, fragment, "findThisFragment")
+                .addToBackStack(null)
+                .commit()
     }
 }
