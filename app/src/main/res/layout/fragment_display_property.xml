@@ -25,13 +25,38 @@
                 android:scaleType="centerCrop"/>
 
             <TextView
+                android:id="@+id/display_property_textView_nbPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_pic"
+                android:text="1/3"
+                android:layout_margin="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_pic"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:text="Click on the image to scroll the next"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_below="@+id/display_property_textView_nbPicture"
+                />
+
+            <TextView
                 android:id="@+id/display_property_textView_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_below="@+id/display_property_pic"
+                android:layout_below="@+id/display_property_textView_nbPicture"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="100,000,000 $"
@@ -53,7 +78,7 @@
                 android:id="@+id/display_property_textView_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/display_property_pic"
+                android:layout_below="@+id/display_property_textView_nbPicture"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="20dp"
                 android:textSize="16dp"

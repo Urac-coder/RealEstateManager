@@ -33,6 +33,9 @@ import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.utils.longToast
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions.hasPermissions
+import com.openclassrooms.realestatemanager.injection.ViewModelFactory
+
+
 
 class AddPropertyFragment : Fragment(){
 
@@ -61,6 +64,7 @@ class AddPropertyFragment : Fragment(){
         add_property_btn_save.setOnClickListener{
             if(allComplete()){
                 insertProperty()
+                insertPicture()
                 launchMainFragment()
                 context!!.longToast("Congratulations you have successfully registered a new property")
                 context!!.longToast("Congratulations you have successfully registered a new property")
@@ -68,9 +72,7 @@ class AddPropertyFragment : Fragment(){
         }
 
         add_property_btn_importPicture.setOnClickListener{
-            this.choosePictureFromPhone()
-            picture = Picture(uriPictureSelected.toString(), "Salle de baim")
-            pictureList.add(picture)
+            this.choosePictureFromPhoneAndAddToList()
         }
     }
 
@@ -112,6 +114,7 @@ class AddPropertyFragment : Fragment(){
             if (resultCode == RESULT_OK) {
                 this.uriPictureSelected = data.data
                 Glide.with(this).load(this.uriPictureSelected).into(this.add_property_display_pic)
+                addPictureToList()
 
             } else {
                 context!!.toast("No picture selected")
@@ -131,18 +134,39 @@ class AddPropertyFragment : Fragment(){
                 add_property_editText_roomNumber.text.toString().toInt(),
                 add_property_editText_bedrooms.text.toString().toInt(),
                 add_property_editText_description.text.toString(),
-                uriPictureSelected.toString(),
+                pictureList[0].url,
                 add_property_editText_address.text.toString(),
                 add_property_editText_city.text.toString(),
                 add_property_editText_zipCode.text.toString().toInt(),
                 add_property_editText_pointOfInterest.text.toString(), true, "00/00/0000", "00/00/0000",
                 add_property_editText_realEstateAgent.text.toString())
 
+        //DEBUG
+        /*property = Property(0,
+                "a",
+                1,
+                1,
+                1,
+                1,
+                "a",
+                pictureList[0].url,
+                "a",
+                "a",
+                1,
+                "a", true, "00/00/0000", "00/00/0000",
+                "a")*/
+
         this.propertyViewModel.insertProperty(property)
     }
 
+    private fun insertPicture(){
+        for (picture in pictureList ){
+            propertyViewModel.insertPicture(picture)
+        }
+    }
+
     private fun allComplete(): Boolean{
-        var allComplete = false
+        /*var allComplete = false
 
         if (add_property_spinner_type.selectedItem.toString() != "Property type" && !add_property_editText_price.text.isEmpty() &&
                 !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() && !add_property_editText_bedrooms.text.isEmpty() &&
@@ -151,16 +175,22 @@ class AddPropertyFragment : Fragment(){
                 !add_property_editText_realEstateAgent.text.isEmpty()) {
             allComplete = true
         }
-        return allComplete
+        return allComplete*/
+        return true
     }
 
-    private fun choosePictureFromPhone() {
+    private fun choosePictureFromPhoneAndAddToList() {
         if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
             EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
             return
         }
         val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(i, RC_CHOOSE_PHOTO)
+    }
+
+    private fun addPictureToList(){
+        picture = Picture(0, uriPictureSelected.toString(), "Salle de baim", 1)
+        pictureList.add(picture)
     }
 
     private fun launchMainFragment() {

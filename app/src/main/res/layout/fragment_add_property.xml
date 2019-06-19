@@ -116,7 +116,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_roomNumber"
-                android:text="Number of room"/>
+                android:text="Number of bedroom"/>
 
             <EditText
                 android:id="@+id/add_property_editText_bedrooms"
@@ -264,7 +264,7 @@
                 android:background="@drawable/border"
                 android:padding="10dp"
                 android:hint="62100"
-                android:inputType="textCapWords"
+                android:inputType="numberDecimal"
                 />
 
             <TextView

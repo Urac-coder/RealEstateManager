@@ -9,15 +9,18 @@ import androidx.room.RoomDatabase
 import android.content.ClipData.Item
 import android.content.Context
 import androidx.room.Database
+import com.openclassrooms.realestatemanager.database.dao.PictureDao
 import com.openclassrooms.realestatemanager.database.dao.PropertyDao
+import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.models.Property
 
 
-@Database(entities = [Property::class], version = 1, exportSchema = false)
+@Database(entities = [Property::class, Picture::class], version = 1, exportSchema = false)
 abstract class PropertyDatabase : RoomDatabase() {
 
     // --- DAO ---
     abstract fun propertyDao(): PropertyDao
+    abstract fun pictureDao(): PictureDao
 
     companion object {
 
