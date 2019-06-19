@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.controllers.fragments.AddPropertyFra
 import com.openclassrooms.realestatemanager.controllers.fragments.MainFragment
 import com.openclassrooms.realestatemanager.utils.addFragment
 import com.openclassrooms.realestatemanager.utils.replaceFragment
+import com.openclassrooms.realestatemanager.utils.toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -56,6 +57,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
+            R.id.menu_toolbar_edit -> applicationContext.toast("edit")
+            R.id.menu_toolbar_search -> applicationContext.toast("search")
         }
         return super.onOptionsItemSelected(item)
     }

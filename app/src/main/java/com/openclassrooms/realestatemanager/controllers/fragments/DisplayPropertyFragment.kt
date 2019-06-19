@@ -1,9 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -18,12 +15,13 @@ import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import android.R.attr.key
 import android.graphics.Color
-import android.view.Menu
+import android.view.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_add_property.*
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
+
 
 class DisplayPropertyFragment : Fragment(){
 
@@ -51,6 +49,7 @@ class DisplayPropertyFragment : Fragment(){
             propertyId = bundle.getLong("PROPERTY_ID", propertyId)
         }
 
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_display_property, container, false)
     }
 
@@ -63,13 +62,18 @@ class DisplayPropertyFragment : Fragment(){
         this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar_in_property, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     // ---------------------
     // UTILS
     // ---------------------
 
     private fun displayProperty(property: Property){
         Glide.with(context!!).load(property.photoUrl).into(display_property_pic)
-        println(property.photoUrl)
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
