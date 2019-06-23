@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import android.R.attr.key
 import android.graphics.Color
 import android.view.*
+import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.models.Picture
 import kotlinx.android.synthetic.main.fragment_add_property.*
@@ -23,9 +24,7 @@ import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
 
-
-class DisplayPropertyFragment : Fragment(){
-
+class DisplayPropertyFragment : Fragment() {
     lateinit var propertyViewModel: PropertyViewModel
     var propertyId: Long = 0
     private val decimalFormat = DecimalFormat("#,###,###")
@@ -42,7 +41,6 @@ class DisplayPropertyFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         configureViewModel()
-        getProperty()
         getPictureList()
 
         display_property_pic.setOnClickListener {
@@ -59,7 +57,7 @@ class DisplayPropertyFragment : Fragment(){
         }
 
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_display_property, container, false)
+        return inflater.inflate(com.openclassrooms.realestatemanager.R.layout.fragment_display_property, container, false)
     }
 
     // ---------------------
@@ -82,7 +80,8 @@ class DisplayPropertyFragment : Fragment(){
     // ---------------------
 
     private fun displayProperty(property: Property){
-        Glide.with(context!!).load(property.picture).into(display_property_pic)
+        Glide.with(context!!).load(this.pictureList[0].url).into(display_property_pic)
+        display_property_picDescription.text = this.pictureList[0].description
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
@@ -110,6 +109,7 @@ class DisplayPropertyFragment : Fragment(){
     private fun displayNextPicture(){
         if (iterator == pictureList.size){ iterator = 0 }
         Glide.with(context!!).load(pictureList[iterator].url).into(display_property_pic)
+        display_property_picDescription.text = pictureList[iterator].description
         iterator++
     }
 
@@ -124,6 +124,8 @@ class DisplayPropertyFragment : Fragment(){
     private fun getPictureList(){
         this.propertyViewModel.getPicture(propertyId).observe(this, Observer<List<Picture>> {
             pictureList  -> this.pictureList = pictureList
-            displayNbPicture()})
+            displayNbPicture()
+            getProperty()
+        })
     }
 }

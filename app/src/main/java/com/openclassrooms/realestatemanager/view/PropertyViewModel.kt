@@ -25,12 +25,19 @@ class PropertyViewModel(private val propertyDataSource: PropertyDataRepository,p
         return propertyDataSource.getAllProperty()
     }
 
-    fun insertProperty(property: Property) {
-        executor.execute { propertyDataSource.insertProperty(property) }
+    fun insertPropertyAndPicture(property: Property, pictureList: List<Picture>) {
+        executor.execute {
+            val id = propertyDataSource.insertProperty(property)
+
+            for (picture in pictureList ){
+                picture.propertyId = id
+                pictureDataSource.insertPicture(picture)
+            }
+        }
     }
 
-    fun deleteProperty(propertId: Long) {
-        executor.execute { propertyDataSource.deleteProperty(propertId) }
+    fun deleteProperty(propertyId: Long) {
+        executor.execute { propertyDataSource.deleteProperty(propertyId) }
     }
 
     fun updateProperty(property: Property) {

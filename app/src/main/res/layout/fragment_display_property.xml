@@ -25,6 +25,19 @@
                 android:scaleType="centerCrop"/>
 
             <TextView
+                android:id="@+id/display_property_picDescription"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:text="Vue exterieur"
+                android:alpha="0.6"
+                android:layout_above="@+id/display_property_textView_nbPicture"/>
+
+            <TextView
                 android:id="@+id/display_property_textView_nbPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -199,6 +199,15 @@
                 android:background="@drawable/border"/>
 
             <TextView
+                android:id="@+id/add_property_display_picDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/add_property_display_pic"
+                android:layout_marginTop="10dp"
+                android:text="Salle de bain"
+                />
+
+            <TextView
                 android:id="@+id/add_property_title_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -206,7 +215,7 @@
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_below="@id/add_property_display_pic"
+                android:layout_below="@id/add_property_display_picDescription"
                 android:text="Enter the address"/>
 
             <EditText

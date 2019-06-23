@@ -19,8 +19,8 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
 
     // --- INSERT ---
 
-    fun insertProperty(property: Property) {
-        propertyDao.insertProperty(property)
+    fun insertProperty(property: Property): Long {
+        return propertyDao.insertProperty(property)
     }
 
     // --- DELETE ---

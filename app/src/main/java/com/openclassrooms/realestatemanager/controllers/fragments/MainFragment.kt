@@ -71,7 +71,7 @@ class MainFragment : Fragment(){
                 }
     }
 
-    private fun updateItemsList(properties: List<Property>) {
+    private fun updatePropertyList(properties: List<Property>) {
         this.adapter.updateData(properties)
     }
 
@@ -80,7 +80,7 @@ class MainFragment : Fragment(){
     // ---------------------
 
     private fun getAllProperty() {
-        this.propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> {propertyList  -> updateItemsList(propertyList) })
+        this.propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> {propertyList  -> updatePropertyList(propertyList) })
     }
 
     private fun launchDisplayPropertyFragment(propertyId: Long) {

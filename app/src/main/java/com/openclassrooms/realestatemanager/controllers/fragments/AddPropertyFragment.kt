@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,38 +8,39 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.models.Property
 import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import kotlinx.android.synthetic.main.fragment_add_property.*
-import androidx.annotation.Nullable
+import kotlinx.android.synthetic.main.fragment_add_property_description.*
 import androidx.lifecycle.Observer
-import android.Manifest.permission
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.app.Activity.RESULT_CANCELED
 import android.net.Uri
-import android.widget.Toast
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.Glide
 import android.content.Intent
 import pub.devrel.easypermissions.EasyPermissions
 import android.app.Activity.RESULT_OK
+import android.app.Dialog
+import android.content.ClipDescription
 import android.provider.MediaStore
-import android.view.Menu
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.utils.longToast
-import pub.devrel.easypermissions.AfterPermissionGranted
-import pub.devrel.easypermissions.EasyPermissions.hasPermissions
-import com.openclassrooms.realestatemanager.injection.ViewModelFactory
-
+import android.widget.TimePicker
+import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.content.DialogInterface
+import android.view.Window
+import android.widget.EditText
+import android.widget.RelativeLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
+import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
 
 
 class AddPropertyFragment : Fragment(){
 
     lateinit var property: Property
     lateinit var propertyViewModel: PropertyViewModel
+    lateinit var pictureDescription: String
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -64,10 +64,11 @@ class AddPropertyFragment : Fragment(){
         add_property_btn_save.setOnClickListener{
             if(allComplete()){
                 insertProperty()
-                insertPicture()
                 launchMainFragment()
+
                 context!!.longToast("Congratulations you have successfully registered a new property")
                 context!!.longToast("Congratulations you have successfully registered a new property")
+
             } else { context?.toast("You must first select all fields") }
         }
 
@@ -113,9 +114,7 @@ class AddPropertyFragment : Fragment(){
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 this.uriPictureSelected = data.data
-                Glide.with(this).load(this.uriPictureSelected).into(this.add_property_display_pic)
-                addPictureToList()
-
+                insertDescriptionToPictureAndAddPictureToList()
             } else {
                 context!!.toast("No picture selected")
             }
@@ -149,24 +148,18 @@ class AddPropertyFragment : Fragment(){
                 1,
                 1,
                 "a",
-                pictureList[0].url,
+                "null",
                 "a",
                 "a",
                 1,
                 "a", true, "00/00/0000", "00/00/0000",
                 "a")*/
 
-        this.propertyViewModel.insertProperty(property)
-    }
-
-    private fun insertPicture(){
-        for (picture in pictureList ){
-            propertyViewModel.insertPicture(picture)
-        }
+        this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
     }
 
     private fun allComplete(): Boolean{
-        /*var allComplete = false
+        var allComplete = false
 
         if (add_property_spinner_type.selectedItem.toString() != "Property type" && !add_property_editText_price.text.isEmpty() &&
                 !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() && !add_property_editText_bedrooms.text.isEmpty() &&
@@ -175,8 +168,7 @@ class AddPropertyFragment : Fragment(){
                 !add_property_editText_realEstateAgent.text.isEmpty()) {
             allComplete = true
         }
-        return allComplete*/
-        return true
+        return allComplete
     }
 
     private fun choosePictureFromPhoneAndAddToList() {
@@ -188,9 +180,29 @@ class AddPropertyFragment : Fragment(){
         startActivityForResult(i, RC_CHOOSE_PHOTO)
     }
 
-    private fun addPictureToList(){
-        picture = Picture(0, uriPictureSelected.toString(), "Salle de baim", 1)
+    private fun addPictureToList(description: String){
+        picture = Picture(0, uriPictureSelected.toString(), description, 0)
         pictureList.add(picture)
+    }
+
+    private fun insertDescriptionToPictureAndAddPictureToList(){
+        val dialogBuilder = AlertDialog.Builder(context!!)
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.fragment_add_property_description, null)
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setTitle("Enter picture description")
+
+        dialogBuilder.setPositiveButton("save") { dialog, id ->
+
+            this.pictureDescription = dialogView.fragment_add_property_description_editText.text.toString()
+            add_property_display_picDescription.text = pictureDescription
+            Glide.with(this).load(this.uriPictureSelected).into(this.add_property_display_pic)
+            addPictureToList(pictureDescription)
+        }
+        dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
     }
 
     private fun launchMainFragment() {

@@ -14,7 +14,7 @@ public interface PropertyDao {
     fun getAllProperty(): LiveData<List<Property>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertProperty(property: Property)
+    fun insertProperty(property: Property): Long
 
     @Update
     fun updateProperty(property: Property)
