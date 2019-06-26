@@ -188,23 +188,13 @@
                 app:srcCompat="@drawable/ic_add_picture_camera"
                 android:background="@drawable/border"/>
 
-            <ImageView
-                android:id="@+id/add_property_display_pic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="20dp"
-                android:scaleType="centerCrop"
-                android:layout_below="@+id/add_property_btn_takePicture"
-                app:srcCompat="@drawable/ic_picture"
-                android:background="@drawable/border"/>
-
-            <TextView
-                android:id="@+id/add_property_display_picDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/add_property_display_pic"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/add_property_fragment_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
-                android:text="Salle de bain"
+                android:layout_below="@id/add_property_btn_importPicture"
+                android:orientation="vertical"
                 />
 
             <TextView
@@ -215,7 +205,7 @@
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_below="@id/add_property_display_picDescription"
+                android:layout_below="@id/add_property_fragment_recyclerView"
                 android:text="Enter the address"/>
 
             <EditText

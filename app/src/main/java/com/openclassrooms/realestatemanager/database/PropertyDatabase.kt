@@ -35,7 +35,6 @@ abstract class PropertyDatabase : RoomDatabase() {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                 PropertyDatabase::class.java, "MyDatabase.db")
-                                .addCallback(prepopulateDatabase())
                                 .build()
                     }
                 }

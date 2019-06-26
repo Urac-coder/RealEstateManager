@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,7 +34,16 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport
+import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
+import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
+import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.*
+import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
+import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_main_item.view.*
 
 
 class AddPropertyFragment : Fragment(){
@@ -41,6 +51,8 @@ class AddPropertyFragment : Fragment(){
     lateinit var property: Property
     lateinit var propertyViewModel: PropertyViewModel
     lateinit var pictureDescription: String
+    lateinit var adapter: AddPropertyPictureAdapter
+    private var iterator: Long = 0
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -48,7 +60,9 @@ class AddPropertyFragment : Fragment(){
     private val RC_CHOOSE_PHOTO = 200
     private var uriPictureSelected: Uri? = null
     private lateinit var picture: Picture
-    var pictureList: MutableList<Picture> = mutableListOf<Picture>()
+    private var pictureList: MutableList<Picture> = mutableListOf<Picture>()
+    private lateinit var pictureAction: String
+    private var pictureIdToReplace: Int = 0
 
     companion object {
         fun newInstance(): AddPropertyFragment {
@@ -60,6 +74,8 @@ class AddPropertyFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         configureViewModel()
+        configureRecyclerView()
+        configureOnClickRecyclerView()
 
         add_property_btn_save.setOnClickListener{
             if(allComplete()){
@@ -74,6 +90,7 @@ class AddPropertyFragment : Fragment(){
 
         add_property_btn_importPicture.setOnClickListener{
             this.choosePictureFromPhoneAndAddToList()
+            pictureAction = "insert"
         }
     }
 
@@ -97,6 +114,26 @@ class AddPropertyFragment : Fragment(){
         }
     }
 
+    @SuppressLint("WrongConstant")
+    private fun configureRecyclerView() {
+        this.adapter = AddPropertyPictureAdapter()
+        this.add_property_fragment_recyclerView.adapter = this.adapter
+        this.add_property_fragment_recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL ,false)
+
+    }
+
+    private fun configureOnClickRecyclerView() {
+        ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
+                .setOnItemClickListener { recyclerView, position, v ->
+                    val response = adapter.getPicture(position)
+                    editPicture(response.id.toInt())
+                }
+    }
+
+    private fun updatePropertyList(picture: List<Picture>) {
+        this.adapter.updateData(picture)
+    }
+
     // -------------------
     // PERMISSION
     // -------------------
@@ -114,7 +151,8 @@ class AddPropertyFragment : Fragment(){
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 this.uriPictureSelected = data.data
-                insertDescriptionToPictureAndAddPictureToList()
+                if (pictureAction == "insert"){ insertDescriptionToPictureAndAddPictureToList() }
+
             } else {
                 context!!.toast("No picture selected")
             }
@@ -155,7 +193,7 @@ class AddPropertyFragment : Fragment(){
                 "a", true, "00/00/0000", "00/00/0000",
                 "a")*/
 
-        this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
+        this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
     }
 
     private fun allComplete(): Boolean{
@@ -181,8 +219,57 @@ class AddPropertyFragment : Fragment(){
     }
 
     private fun addPictureToList(description: String){
-        picture = Picture(0, uriPictureSelected.toString(), description, 0)
+        picture = Picture(iterator, uriPictureSelected.toString(), description, 0)
         pictureList.add(picture)
+        updatePropertyList(pictureList)
+        iterator++
+    }
+
+    private fun setGoodIdToPictureList(pictureList : List<Picture>): List<Picture>{
+        for (picture in pictureList ){
+            picture.id = 0
+        }
+        return pictureList
+    }
+
+    private fun editPicture (pictureId : Int){
+        val dialogBuilder = AlertDialog.Builder(context!!)
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.fragment_add_property_edit_picture, null)
+        dialogBuilder.setView(dialogView)
+
+        //INIT
+        context!!.toast("dialogInit")
+        Glide.with(dialogView).load(pictureList[pictureId].url).into(dialogView.fragment_add_property_edit_picture_pic)
+        dialogView.fragment_add_property_edit_picture_editText_description.setText(pictureList[pictureId].description)
+
+        //ACTION
+        dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
+            pictureAction = "replace"
+            pictureIdToReplace = pictureId
+            this.choosePictureFromPhoneAndAddToList()
+            Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
+        }
+
+        dialogView.fragment_add_property_edit_picture_pic.setOnClickListener {
+            Glide.with(dialogView).load(uriPictureSelected).into(dialogView.fragment_add_property_edit_picture_pic)
+        }
+
+        dialogBuilder.setPositiveButton("save") { dialog, id ->
+            pictureList[pictureId].description = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
+            this.pictureDescription = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
+            replacePicture()
+            adapter.notifyDataSetChanged()
+        }
+
+        dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun replacePicture(){
+        pictureList[pictureIdToReplace].url = uriPictureSelected.toString()
     }
 
     private fun insertDescriptionToPictureAndAddPictureToList(){
@@ -195,8 +282,6 @@ class AddPropertyFragment : Fragment(){
         dialogBuilder.setPositiveButton("save") { dialog, id ->
 
             this.pictureDescription = dialogView.fragment_add_property_description_editText.text.toString()
-            add_property_display_picDescription.text = pictureDescription
-            Glide.with(this).load(this.uriPictureSelected).into(this.add_property_display_pic)
             addPictureToList(pictureDescription)
         }
         dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
