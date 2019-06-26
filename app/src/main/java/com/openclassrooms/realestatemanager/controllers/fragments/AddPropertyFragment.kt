@@ -53,6 +53,8 @@ class AddPropertyFragment : Fragment(){
     lateinit var pictureDescription: String
     lateinit var adapter: AddPropertyPictureAdapter
     private var iterator: Long = 0
+    val arrayClickOnPicture = arrayOf("Edit","Delete")
+
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -62,7 +64,6 @@ class AddPropertyFragment : Fragment(){
     private lateinit var picture: Picture
     private var pictureList: MutableList<Picture> = mutableListOf<Picture>()
     private lateinit var pictureAction: String
-    private var pictureIdToReplace: Int = 0
 
     companion object {
         fun newInstance(): AddPropertyFragment {
@@ -126,7 +127,8 @@ class AddPropertyFragment : Fragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
-                    editPicture(response.id.toInt())
+                    //editPicture(response.id.toInt())
+                    clickOnPicture(response.id.toInt())
                 }
     }
 
@@ -232,6 +234,18 @@ class AddPropertyFragment : Fragment(){
         return pictureList
     }
 
+    private fun clickOnPicture(pictureId : Int){
+        val builder = AlertDialog.Builder(context!!)
+                .setItems(arrayClickOnPicture
+                ) { dialog, which ->
+                    when(which){
+                        0 -> editPicture(pictureId)
+                        1 -> deletePicture(pictureId)
+                    }
+                }
+        builder.create().show()
+    }
+
     private fun editPicture (pictureId : Int){
         val dialogBuilder = AlertDialog.Builder(context!!)
         val inflater = this.layoutInflater
@@ -246,7 +260,6 @@ class AddPropertyFragment : Fragment(){
         //ACTION
         dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
             pictureAction = "replace"
-            pictureIdToReplace = pictureId
             this.choosePictureFromPhoneAndAddToList()
             Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
         }
@@ -258,7 +271,7 @@ class AddPropertyFragment : Fragment(){
         dialogBuilder.setPositiveButton("save") { dialog, id ->
             pictureList[pictureId].description = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
             this.pictureDescription = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
-            replacePicture()
+            replacePicture(pictureId)
             adapter.notifyDataSetChanged()
         }
 
@@ -268,8 +281,13 @@ class AddPropertyFragment : Fragment(){
         alertDialog.show()
     }
 
-    private fun replacePicture(){
-        pictureList[pictureIdToReplace].url = uriPictureSelected.toString()
+    private fun replacePicture(pictureId: Int){
+        pictureList[pictureId].url = uriPictureSelected.toString()
+    }
+
+    private fun deletePicture(pictureId: Int){
+        pictureList.removeAt(pictureId)
+        adapter.notifyDataSetChanged()
     }
 
     private fun insertDescriptionToPictureAndAddPictureToList(){
