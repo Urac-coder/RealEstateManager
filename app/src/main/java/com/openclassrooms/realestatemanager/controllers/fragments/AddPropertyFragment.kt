@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,11 +30,19 @@ import com.openclassrooms.realestatemanager.utils.longToast
 import android.widget.TimePicker
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.os.Environment
 import android.view.Window
 import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport
@@ -44,6 +53,11 @@ import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.fragment_main_item.view.*
+import kotlinx.android.synthetic.main.fragment_take_picture.*
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class AddPropertyFragment : Fragment(){
@@ -53,17 +67,19 @@ class AddPropertyFragment : Fragment(){
     lateinit var pictureDescription: String
     lateinit var adapter: AddPropertyPictureAdapter
     private var iterator: Long = 0
-    val arrayClickOnPicture = arrayOf("Edit","Delete")
-
+    private val arrayClickOnPicture = arrayOf("Edit","Delete")
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
     private val RC_PICTURE_PERMS = 100
     private val RC_CHOOSE_PHOTO = 200
     private var uriPictureSelected: Uri? = null
+    private var uriPictureSelectedEdit: Uri? = null
     private lateinit var picture: Picture
     private var pictureList: MutableList<Picture> = mutableListOf<Picture>()
     private lateinit var pictureAction: String
+    val REQUEST_IMAGE_CAPTURE = 1
+    private val PERMISSION_REQUEST_CODE_CAPTURE: Int = 101
 
     companion object {
         fun newInstance(): AddPropertyFragment {
@@ -92,6 +108,13 @@ class AddPropertyFragment : Fragment(){
         add_property_btn_importPicture.setOnClickListener{
             this.choosePictureFromPhoneAndAddToList()
             pictureAction = "insert"
+        }
+
+        add_property_btn_takePicture.setOnClickListener {
+            if (checkPermission()){
+                pictureAction = "insert"
+                takePicture()
+            } else requestPermission()
         }
     }
 
@@ -127,7 +150,6 @@ class AddPropertyFragment : Fragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
-                    //editPicture(response.id.toInt())
                     clickOnPicture(response.id.toInt())
                 }
     }
@@ -143,7 +165,27 @@ class AddPropertyFragment : Fragment(){
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE_CAPTURE -> {
+
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+                    takePicture()
+                } else { context!!.toast("Permission Denied") }
+            }
+        }
     }
+
+    private fun checkPermission(): Boolean {
+        return (ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(context!!, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(activity!!, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA), PERMISSION_REQUEST_CODE_CAPTURE)
+    }
+
 
     // --------------------
     // HANDLER
@@ -152,10 +194,17 @@ class AddPropertyFragment : Fragment(){
     private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
-                this.uriPictureSelected = data.data
-                if (pictureAction == "insert"){ insertDescriptionToPictureAndAddPictureToList() }
+                if (pictureAction == "insert"){
+                    this.uriPictureSelected = data.data
+                    insertDescriptionToPictureAndAddPictureToList()
+                }
 
-            } else {
+                if (pictureAction == "replace"){
+                    this.uriPictureSelectedEdit = data.data
+                }
+
+
+                } else {
                 context!!.toast("No picture selected")
             }
         }
@@ -165,6 +214,7 @@ class AddPropertyFragment : Fragment(){
     // UTILS
     // ---------------------
 
+    //INSERT
     private fun insertProperty(){
         property = Property(0,
                 add_property_spinner_type.selectedItem.toString(),
@@ -211,15 +261,7 @@ class AddPropertyFragment : Fragment(){
         return allComplete
     }
 
-    private fun choosePictureFromPhoneAndAddToList() {
-        if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
-            EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
-            return
-        }
-        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(i, RC_CHOOSE_PHOTO)
-    }
-
+    //PICTURE
     private fun addPictureToList(description: String){
         picture = Picture(iterator, uriPictureSelected.toString(), description, 0)
         pictureList.add(picture)
@@ -234,6 +276,35 @@ class AddPropertyFragment : Fragment(){
         return pictureList
     }
 
+    private fun insertDescriptionToPictureAndAddPictureToList(){
+        val dialogBuilder = AlertDialog.Builder(context!!)
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.fragment_add_property_description, null)
+        dialogBuilder.setView(dialogView)
+        dialogBuilder.setTitle("Enter picture description")
+
+        dialogBuilder.setPositiveButton("save") { dialog, id ->
+
+            this.pictureDescription = dialogView.fragment_add_property_description_editText.text.toString()
+            addPictureToList(pictureDescription)
+        }
+        dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+    }
+
+    //IMPORT PICTURE
+    private fun choosePictureFromPhoneAndAddToList() {
+        if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
+            EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
+            return
+        }
+        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(i, RC_CHOOSE_PHOTO)
+    }
+
+    //EDIT PICTURE
     private fun clickOnPicture(pictureId : Int){
         val builder = AlertDialog.Builder(context!!)
                 .setItems(arrayClickOnPicture
@@ -256,6 +327,7 @@ class AddPropertyFragment : Fragment(){
         context!!.toast("dialogInit")
         Glide.with(dialogView).load(pictureList[pictureId].url).into(dialogView.fragment_add_property_edit_picture_pic)
         dialogView.fragment_add_property_edit_picture_editText_description.setText(pictureList[pictureId].description)
+        uriPictureSelectedEdit = Uri.parse(pictureList[pictureId].url)
 
         //ACTION
         dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
@@ -264,8 +336,14 @@ class AddPropertyFragment : Fragment(){
             Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
         }
 
+        dialogView.fragment_add_property_edit_btn_takePicture.setOnClickListener {
+            pictureAction = "replace"
+            if (checkPermission()){ takePicture() } else requestPermission()
+            Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
+        }
+
         dialogView.fragment_add_property_edit_picture_pic.setOnClickListener {
-            Glide.with(dialogView).load(uriPictureSelected).into(dialogView.fragment_add_property_edit_picture_pic)
+            Glide.with(dialogView).load(uriPictureSelectedEdit).into(dialogView.fragment_add_property_edit_picture_pic)
         }
 
         dialogBuilder.setPositiveButton("save") { dialog, id ->
@@ -282,7 +360,7 @@ class AddPropertyFragment : Fragment(){
     }
 
     private fun replacePicture(pictureId: Int){
-        pictureList[pictureId].url = uriPictureSelected.toString()
+        pictureList[pictureId].url = uriPictureSelectedEdit.toString()
     }
 
     private fun deletePicture(pictureId: Int){
@@ -290,24 +368,41 @@ class AddPropertyFragment : Fragment(){
         adapter.notifyDataSetChanged()
     }
 
-    private fun insertDescriptionToPictureAndAddPictureToList(){
-        val dialogBuilder = AlertDialog.Builder(context!!)
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.fragment_add_property_description, null)
-        dialogBuilder.setView(dialogView)
-        dialogBuilder.setTitle("Enter picture description")
+    //TAKE PICTURE
+    private fun takePicture() {
+        val intent: Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val file: File = createFile()
 
-        dialogBuilder.setPositiveButton("save") { dialog, id ->
+        uriPictureSelected = FileProvider.getUriForFile(
+                activity!!,
+                "com.openclassrooms.realestatemanager.fileprovider",
+                file
+        )
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPictureSelected)
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
 
-            this.pictureDescription = dialogView.fragment_add_property_description_editText.text.toString()
-            addPictureToList(pictureDescription)
+        if (pictureAction == "insert"){
+            insertDescriptionToPictureAndAddPictureToList()
         }
-        dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
 
-        val alertDialog = dialogBuilder.create()
-        alertDialog.show()
+        if (pictureAction == "replace"){
+            this.uriPictureSelectedEdit = uriPictureSelected
+        }
     }
 
+    @Throws(IOException::class)
+    private fun createFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+                "JPEG_${timeStamp}_", /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        )
+    }
+
+    //LAUNCH
     private fun launchMainFragment() {
         val mainFragment = MainFragment()
         activity!!.supportFragmentManager.beginTransaction()
