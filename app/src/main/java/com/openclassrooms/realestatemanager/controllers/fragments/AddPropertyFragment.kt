@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,45 +14,27 @@ import com.openclassrooms.realestatemanager.models.Property
 import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import kotlinx.android.synthetic.main.fragment_add_property.*
-import kotlinx.android.synthetic.main.fragment_add_property_description.*
 import androidx.lifecycle.Observer
 import android.net.Uri
 import com.bumptech.glide.Glide
 import android.content.Intent
 import pub.devrel.easypermissions.EasyPermissions
 import android.app.Activity.RESULT_OK
-import android.app.Dialog
-import android.content.ClipDescription
 import android.provider.MediaStore
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.utils.longToast
-import android.widget.TimePicker
-import android.content.Context.LAYOUT_INFLATER_SERVICE
-import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.os.Environment
-import android.view.Window
-import android.widget.EditText
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
-import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
-import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
-import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.fragment_main_item.view.*
-import kotlinx.android.synthetic.main.fragment_take_picture.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -68,17 +49,17 @@ class AddPropertyFragment : Fragment(){
     lateinit var adapter: AddPropertyPictureAdapter
     private var iterator: Long = 0
     private val arrayClickOnPicture = arrayOf("Edit","Delete")
+    private var propertyToEditId: Long = 0 // 0 = CREATE PROPERTY else MODIFY PROPERTY
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
     private val RC_PICTURE_PERMS = 100
     private val RC_CHOOSE_PHOTO = 200
     private var uriPictureSelected: Uri? = null
-    private var uriPictureSelectedEdit: Uri? = null
     private lateinit var picture: Picture
     private var pictureList: MutableList<Picture> = mutableListOf<Picture>()
     private lateinit var pictureAction: String
-    val REQUEST_IMAGE_CAPTURE = 1
+    private val REQUEST_IMAGE_CAPTURE = 1
     private val PERMISSION_REQUEST_CODE_CAPTURE: Int = 101
 
     companion object {
@@ -94,13 +75,20 @@ class AddPropertyFragment : Fragment(){
         configureRecyclerView()
         configureOnClickRecyclerView()
 
+        if (propertyToEditId > 0){
+            getPropertyToEdit()
+            getPictureListToEdit()
+        }
+
         add_property_btn_save.setOnClickListener{
             if(allComplete()){
                 insertProperty()
                 launchMainFragment()
 
-                context!!.longToast("Congratulations you have successfully registered a new property")
-                context!!.longToast("Congratulations you have successfully registered a new property")
+                if (propertyToEditId == 0L) {
+                    context!!.longToast("Congratulations you have successfully registered a new property")
+                    context!!.longToast("Congratulations you have successfully registered a new property")
+                }
 
             } else { context?.toast("You must first select all fields") }
         }
@@ -119,6 +107,11 @@ class AddPropertyFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val bundle = this.arguments
+        if (bundle != null) {
+            propertyToEditId = bundle.getLong("PROPERTY_ID", propertyToEditId)
+        }
+
         return inflater.inflate(R.layout.fragment_add_property, container, false)
     }
 
@@ -150,11 +143,12 @@ class AddPropertyFragment : Fragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
-                    clickOnPicture(response.id.toInt())
+                    if (propertyToEditId == 0L){ clickOnPicture(response.id.toInt()) }
+                    else{ clickOnPicture(getGoodIndexOfPictureListWhenEditProperty(response.id.toInt(), pictureList[0].id.toInt())) }
                 }
     }
 
-    private fun updatePropertyList(picture: List<Picture>) {
+    private fun updatePictureList(picture: List<Picture>) {
         this.adapter.updateData(picture)
     }
 
@@ -194,19 +188,9 @@ class AddPropertyFragment : Fragment(){
     private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
-                if (pictureAction == "insert"){
-                    this.uriPictureSelected = data.data
-                    insertDescriptionToPictureAndAddPictureToList()
-                }
-
-                if (pictureAction == "replace"){
-                    this.uriPictureSelectedEdit = data.data
-                }
-
-
-                } else {
-                context!!.toast("No picture selected")
-            }
+                this.uriPictureSelected = data.data
+                if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
+            } else {context!!.toast("No picture selected")}
         }
     }
 
@@ -216,7 +200,7 @@ class AddPropertyFragment : Fragment(){
 
     //INSERT
     private fun insertProperty(){
-        property = Property(0,
+        property = Property(propertyToEditId,
                 add_property_spinner_type.selectedItem.toString(),
                 add_property_editText_price.text.toString().toInt(),
                 add_property_editText_surface.text.toString().toInt(),
@@ -227,7 +211,9 @@ class AddPropertyFragment : Fragment(){
                 add_property_editText_address.text.toString(),
                 add_property_editText_city.text.toString(),
                 add_property_editText_zipCode.text.toString().toInt(),
-                add_property_editText_pointOfInterest.text.toString(), true, "00/00/0000", "00/00/0000",
+                add_property_editText_pointOfInterest.text.toString(), true,
+                Utils.getTodayDate(),
+                "00/00/0000",
                 add_property_editText_realEstateAgent.text.toString())
 
         //DEBUG
@@ -238,14 +224,18 @@ class AddPropertyFragment : Fragment(){
                 1,
                 1,
                 "a",
-                "null",
+                pictureList[0].url,
                 "a",
                 "a",
                 1,
                 "a", true, "00/00/0000", "00/00/0000",
                 "a")*/
 
-        this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
+        if (propertyToEditId == 0L){
+            this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
+        } else{
+            this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
+        }
     }
 
     private fun allComplete(): Boolean{
@@ -253,7 +243,7 @@ class AddPropertyFragment : Fragment(){
 
         if (add_property_spinner_type.selectedItem.toString() != "Property type" && !add_property_editText_price.text.isEmpty() &&
                 !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() && !add_property_editText_bedrooms.text.isEmpty() &&
-                !add_property_editText_description.text.isEmpty() && uriPictureSelected != null && !add_property_editText_address.text.isEmpty() &&
+                !add_property_editText_description.text.isEmpty() && !pictureList.isEmpty() && !add_property_editText_address.text.isEmpty() &&
                 !add_property_editText_zipCode.text.isEmpty() && !add_property_editText_pointOfInterest.text.isEmpty() &&
                 !add_property_editText_realEstateAgent.text.isEmpty()) {
             allComplete = true
@@ -265,7 +255,7 @@ class AddPropertyFragment : Fragment(){
     private fun addPictureToList(description: String){
         picture = Picture(iterator, uriPictureSelected.toString(), description, 0)
         pictureList.add(picture)
-        updatePropertyList(pictureList)
+        updatePictureList(pictureList)
         iterator++
     }
 
@@ -324,10 +314,9 @@ class AddPropertyFragment : Fragment(){
         dialogBuilder.setView(dialogView)
 
         //INIT
-        context!!.toast("dialogInit")
         Glide.with(dialogView).load(pictureList[pictureId].url).into(dialogView.fragment_add_property_edit_picture_pic)
         dialogView.fragment_add_property_edit_picture_editText_description.setText(pictureList[pictureId].description)
-        uriPictureSelectedEdit = Uri.parse(pictureList[pictureId].url)
+        uriPictureSelected = Uri.parse(pictureList[pictureId].url)
 
         //ACTION
         dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
@@ -343,9 +332,10 @@ class AddPropertyFragment : Fragment(){
         }
 
         dialogView.fragment_add_property_edit_picture_pic.setOnClickListener {
-            Glide.with(dialogView).load(uriPictureSelectedEdit).into(dialogView.fragment_add_property_edit_picture_pic)
+            Glide.with(dialogView).load(uriPictureSelected).into(dialogView.fragment_add_property_edit_picture_pic)
         }
 
+        //DIALOG BUTTON
         dialogBuilder.setPositiveButton("save") { dialog, id ->
             pictureList[pictureId].description = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
             this.pictureDescription = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
@@ -360,7 +350,7 @@ class AddPropertyFragment : Fragment(){
     }
 
     private fun replacePicture(pictureId: Int){
-        pictureList[pictureId].url = uriPictureSelectedEdit.toString()
+        pictureList[pictureId].url = uriPictureSelected.toString()
     }
 
     private fun deletePicture(pictureId: Int){
@@ -370,24 +360,14 @@ class AddPropertyFragment : Fragment(){
 
     //TAKE PICTURE
     private fun takePicture() {
-        val intent: Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         val file: File = createFile()
 
-        uriPictureSelected = FileProvider.getUriForFile(
-                activity!!,
-                "com.openclassrooms.realestatemanager.fileprovider",
-                file
-        )
+        uriPictureSelected = FileProvider.getUriForFile(activity!!, "com.openclassrooms.realestatemanager.fileprovider", file)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPictureSelected)
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
 
-        if (pictureAction == "insert"){
-            insertDescriptionToPictureAndAddPictureToList()
-        }
-
-        if (pictureAction == "replace"){
-            this.uriPictureSelectedEdit = uriPictureSelected
-        }
+        if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
     }
 
     @Throws(IOException::class)
@@ -395,11 +375,65 @@ class AddPropertyFragment : Fragment(){
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-                "JPEG_${timeStamp}_", /* prefix */
-                ".jpg", /* suffix */
-                storageDir /* directory */
-        )
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
+    }
+
+    //EDIT PROPERTY
+    private fun getPropertyToEdit(){
+        this.propertyViewModel.getProperty(propertyToEditId).observe(this, Observer<Property> { property -> savePropertyToEdit(property) })
+    }
+
+    private fun getPictureListToEdit(){
+        this.propertyViewModel.getPicture(propertyToEditId).observe(this, Observer<List<Picture>> {
+            pictureList  ->  saveAndDisplayPictureListToEdit(pictureList)
+        })
+    }
+
+    private fun saveAndDisplayPictureListToEdit(list: List<Picture>){
+        for (picture in list ){
+            this.pictureList.add(picture)
+        }
+        updatePictureList(pictureList)
+    }
+
+    private fun savePropertyToEdit(property: Property){
+        this.property = property
+        initInputWithPropertyToEdit(property)
+    }
+
+    private fun initInputWithPropertyToEdit(property: Property){
+        add_property_spinner_type.setSelection(getGoodItemOfSpinner(property.type))
+        add_property_editText_price.setText(property.price.toString())
+        add_property_editText_surface.setText(property.area.toString())
+        add_property_editText_roomNumber.setText(property.nbRooms.toString())
+        add_property_editText_bedrooms.setText(property.bedrooms.toString())
+        add_property_editText_description.setText(property.description)
+        add_property_editText_address.setText(property.address)
+        add_property_editText_city.setText(property.city)
+        add_property_editText_zipCode.setText(property.zipCode.toString())
+        add_property_editText_pointOfInterest.setText(property.pointOfInterest)
+        add_property_editText_realEstateAgent.setText(property.realEstateAgent)
+
+        add_property_btn_save.text = "Save modification"
+    }
+
+    private fun getGoodItemOfSpinner(item: String):Int{
+        var value: Int = 0
+
+        when(item){
+            "Loft" -> value = 1
+            "Manor" -> value = 2
+            "House" -> value = 3
+            "Residence" -> value = 4
+            "Hotel" -> value = 5
+            "Flat" -> value = 6
+            "Duplex" -> value = 7
+        }
+        return value
+    }
+
+    private fun getGoodIndexOfPictureListWhenEditProperty(pictureId: Int, pictureListFirstIdToSubtractAtPictureId: Int): Int{
+        return pictureId - pictureListFirstIdToSubtractAtPictureId
     }
 
     //LAUNCH

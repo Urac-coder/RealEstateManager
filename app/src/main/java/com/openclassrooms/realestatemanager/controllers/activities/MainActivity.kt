@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.menu_toolbar_edit -> applicationContext.toast("edit")
             R.id.menu_toolbar_search -> applicationContext.toast("search")
         }
         return super.onOptionsItemSelected(item)

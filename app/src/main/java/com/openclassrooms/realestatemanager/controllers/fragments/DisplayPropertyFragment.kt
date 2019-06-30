@@ -75,6 +75,13 @@ class DisplayPropertyFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_toolbar_edit -> launchAddPropertyFragmentEditMode(propertyId)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     // ---------------------
     // UTILS
     // ---------------------
@@ -127,5 +134,17 @@ class DisplayPropertyFragment : Fragment() {
             displayNbPicture()
             getProperty()
         })
+    }
+
+    //LAUNCH
+    private fun launchAddPropertyFragmentEditMode(propertyId: Long) {
+        val fragment = AddPropertyFragment()
+        val bundle = Bundle()
+        bundle.putLong("PROPERTY_ID", propertyId)
+        fragment.arguments = bundle
+        activity!!.supportFragmentManager.beginTransaction()
+                .replace(R.id.main_activity_frame, fragment, "findThisFragment")
+                .addToBackStack(null)
+                .commit()
     }
 }
