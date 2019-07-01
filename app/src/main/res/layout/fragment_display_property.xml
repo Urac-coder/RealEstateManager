@@ -262,12 +262,15 @@
 
             <ImageView
                 android:id="@+id/display_property_map"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/display_property_textView_location"
                 android:src="@drawable/specimen_map"
+                android:scaleType="centerCrop"
                 />
 
 

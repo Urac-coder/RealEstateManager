@@ -216,7 +216,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="47 rue du pont"
+                android:hint="47, rue du pont"
                 android:inputType="textCapSentences"
                 />
 
@@ -285,7 +285,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
-                android:hint="Ecole, carrefour, parc..."
+                android:hint="Ecole, carrefour, parc"
                 android:inputType="textCapWords"
                 />
 

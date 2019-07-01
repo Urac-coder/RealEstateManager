@@ -4,22 +4,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.models.Property
-import com.openclassrooms.realestatemanager.utils.ItemClickSupport
-import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
-import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
-import kotlinx.android.synthetic.main.fragment_main.*
-import android.R.attr.key
 import android.graphics.Color
 import android.view.*
-import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.models.Picture
-import kotlinx.android.synthetic.main.fragment_add_property.*
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
@@ -101,6 +93,15 @@ class DisplayPropertyFragment : Fragment() {
         display_property_textView_RealEstateAgent.text = property.realEstateAgent
         display_property_textView_entryDate.text = property.entryDate
         display_property_textView_saleDate.text = property.saleDate
+        Glide.with(context!!).load(getUrlMap(property)).into(display_property_map)
+    }
+
+    private fun getUrlMap(property: Property): String{
+        var apiKey: String = "&key=AIzaSyDaQQmTUPEcCwfBwxHaASYD1iHPKhUhxNk"
+        var baseUrl: String = "https://maps.googleapis.com/maps/api/staticmap?cente="
+        var formattedAddress: String = property.address.replace(" ", "+")
+        formattedAddress = formattedAddress.replaceFirst("+", "")
+        return baseUrl + formattedAddress + "," + property.city + "&size=500x300" + "&markers=" + formattedAddress + "," + property.city + apiKey
     }
 
     private fun propertyAlwaysAvailable(available: Boolean){
