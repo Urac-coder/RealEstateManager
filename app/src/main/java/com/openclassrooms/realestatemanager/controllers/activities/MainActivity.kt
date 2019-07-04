@@ -12,6 +12,7 @@ import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.controllers.fragments.AddPropertyFragment
 import com.openclassrooms.realestatemanager.controllers.fragments.MainFragment
+import com.openclassrooms.realestatemanager.controllers.fragments.MapViewFragment
 import com.openclassrooms.realestatemanager.utils.addFragment
 import com.openclassrooms.realestatemanager.utils.replaceFragment
 import com.openclassrooms.realestatemanager.utils.toast
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         when (integer) {
             R.id.action_list -> replaceFragment(MainFragment.newInstance(), mainFrameLayout)
             R.id.action_add -> replaceFragment(AddPropertyFragment.newInstance(), mainFrameLayout)
-            R.id.action_map -> println("ca marche po")
+            R.id.action_map -> replaceFragment(MapViewFragment.newInstance(), mainFrameLayout)
         }
         return true
     }

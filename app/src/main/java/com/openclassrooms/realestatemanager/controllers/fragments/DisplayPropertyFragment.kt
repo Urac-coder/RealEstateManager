@@ -11,6 +11,7 @@ import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import android.graphics.Color
 import android.view.*
 import com.bumptech.glide.Glide
+import com.openclassrooms.realestatemanager.BuildConfig
 import com.openclassrooms.realestatemanager.models.Picture
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
@@ -97,11 +98,10 @@ class DisplayPropertyFragment : Fragment() {
     }
 
     private fun getUrlMap(property: Property): String{
-        var apiKey: String = "&key=AIzaSyDaQQmTUPEcCwfBwxHaASYD1iHPKhUhxNk"
         var baseUrl: String = "https://maps.googleapis.com/maps/api/staticmap?cente="
         var formattedAddress: String = property.address.replace(" ", "+")
         formattedAddress = formattedAddress.replaceFirst("+", "")
-        return baseUrl + formattedAddress + "," + property.city + "&size=500x300" + "&markers=" + formattedAddress + "," + property.city + apiKey
+        return baseUrl + formattedAddress + "," + property.city + "&size=500x300" + "&markers=" + formattedAddress + "," + property.city + "&key=" + BuildConfig.ApiKey
     }
 
     private fun propertyAlwaysAvailable(available: Boolean){
