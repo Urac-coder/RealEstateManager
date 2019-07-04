@@ -35,6 +35,7 @@ import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
+import kotlinx.android.synthetic.main.fragment_display_property.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -77,9 +78,12 @@ class AddPropertyFragment : Fragment(){
         configureRecyclerView()
         configureOnClickRecyclerView()
 
-        if (propertyToEditId > 0){
+        if (propertyToEditId.toInt() != 0){
             getPropertyToEdit()
             getPictureListToEdit()
+            add_property_btn_sale.visibility = View.VISIBLE
+        } else{
+            (add_property_btn_sale.parent as ViewGroup).removeView(add_property_btn_sale)
         }
 
         add_property_btn_save.setOnClickListener{

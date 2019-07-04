@@ -16,6 +16,7 @@ import com.openclassrooms.realestatemanager.models.Picture
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
+import android.view.ViewGroup
 
 class DisplayPropertyFragment : Fragment() {
     lateinit var propertyViewModel: PropertyViewModel
@@ -84,7 +85,9 @@ class DisplayPropertyFragment : Fragment() {
             display_property_pic_view.visibility = View.VISIBLE
             Glide.with(context!!).load(this.pictureList[0].url).into(display_property_pic)
             display_property_picDescription.text = this.pictureList[0].description
-        } else display_property_pic_view.visibility = View.INVISIBLE
+        } else {
+            (display_property_pic_view.parent as ViewGroup).removeView(display_property_pic_view)
+        }
 
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
@@ -110,7 +113,7 @@ class DisplayPropertyFragment : Fragment() {
         if (property.address != "null" || property.city != "null"){
             display_property_map.visibility = View.VISIBLE
             Glide.with(context!!).load(getUrlMap(property)).into(display_property_map)
-        } else display_property_map.visibility = View.INVISIBLE
+        } else (display_property_map.parent as ViewGroup).removeView(display_property_map)
     }
 
     private fun getUrlMap(property: Property): String{
