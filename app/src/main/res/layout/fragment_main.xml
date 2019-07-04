@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:layout_marginLeft="10dp"
+        android:text="You have not added any property yet, click on + button"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/main_fragment_recyclerView"
         android:layout_width="match_parent"

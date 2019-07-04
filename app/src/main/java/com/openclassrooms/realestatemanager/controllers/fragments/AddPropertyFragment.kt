@@ -61,6 +61,8 @@ class AddPropertyFragment : Fragment(){
     private lateinit var pictureAction: String
     private val REQUEST_IMAGE_CAPTURE = 1
     private val PERMISSION_REQUEST_CODE_CAPTURE: Int = 101
+    private var pictureToDeleteIdList: MutableList<Long> = mutableListOf<Long>()
+    private var allowPictureDelete: Boolean = false
 
     companion object {
         fun newInstance(): AddPropertyFragment {
@@ -81,16 +83,20 @@ class AddPropertyFragment : Fragment(){
         }
 
         add_property_btn_save.setOnClickListener{
-            if(allComplete()){
-                insertProperty()
-                launchMainFragment()
+            insertProperty()
+            launchMainFragment()
 
-                if (propertyToEditId == 0L) {
-                    context!!.longToast("Congratulations you have successfully registered a new property")
-                    context!!.longToast("Congratulations you have successfully registered a new property")
+            if (propertyToEditId == 0L) {
+                context!!.longToast("Congratulations you have successfully registered a new property")
+                context!!.longToast("Congratulations you have successfully registered a new property")
+            } else{
+                if (allowPictureDelete) {
+                    for (pictureToDeleteId  in pictureToDeleteIdList){
+                        this.propertyViewModel.deletePicture(pictureToDeleteId)
+                    }
+                    allowPictureDelete = false
                 }
-
-            } else { context?.toast("You must first select all fields") }
+            }
         }
 
         add_property_btn_importPicture.setOnClickListener{
@@ -143,8 +149,7 @@ class AddPropertyFragment : Fragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
-                    if (propertyToEditId == 0L){ clickOnPicture(response.id.toInt()) }
-                    else{ clickOnPicture(getGoodIndexOfPictureListWhenEditProperty(response.id.toInt(), pictureList[0].id.toInt())) }
+                    clickOnPicture(getGoodPicture(response.id.toInt()), response.id)
                 }
     }
 
@@ -201,35 +206,20 @@ class AddPropertyFragment : Fragment(){
     //INSERT
     private fun insertProperty(){
         property = Property(propertyToEditId,
-                add_property_spinner_type.selectedItem.toString(),
-                add_property_editText_price.text.toString().toInt(),
-                add_property_editText_surface.text.toString().toInt(),
-                add_property_editText_roomNumber.text.toString().toInt(),
-                add_property_editText_bedrooms.text.toString().toInt(),
-                add_property_editText_description.text.toString(),
-                pictureList[0].url,
-                add_property_editText_address.text.toString(),
-                add_property_editText_city.text.toString(),
-                add_property_editText_zipCode.text.toString().toInt(),
-                add_property_editText_pointOfInterest.text.toString(), true,
+                propertyInfoEmptyString(add_property_spinner_type.selectedItem.toString()),
+                propertyInfoEmptyInt(add_property_editText_price.text.toString()),
+                propertyInfoEmptyInt(add_property_editText_surface.text.toString()),
+                propertyInfoEmptyInt(add_property_editText_roomNumber.text.toString()),
+                propertyInfoEmptyInt(add_property_editText_bedrooms.text.toString()),
+                propertyInfoEmptyString(add_property_editText_description.text.toString()),
+                propertyInfoEmptyPicture(pictureList),
+                propertyInfoEmptyString(add_property_editText_address.text.toString()),
+                propertyInfoEmptyString(add_property_editText_city.text.toString()),
+                propertyInfoEmptyInt(add_property_editText_zipCode.text.toString()),
+                propertyInfoEmptyString(add_property_editText_pointOfInterest.text.toString()), true,
                 Utils.getTodayDate(),
-                "00/00/0000",
-                add_property_editText_realEstateAgent.text.toString())
-
-        //DEBUG
-        /*property = Property(0,
-                "a",
-                1,
-                1,
-                1,
-                1,
-                "a",
-                pictureList[0].url,
-                "a",
-                "a",
-                1,
-                "a", true, "00/00/0000", "00/00/0000",
-                "a")*/
+                "null",
+                propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()))
 
         if (propertyToEditId == 0L){
             this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
@@ -238,17 +228,16 @@ class AddPropertyFragment : Fragment(){
         }
     }
 
-    private fun allComplete(): Boolean{
-        var allComplete = false
+    private fun propertyInfoEmptyString(value: String): String{
+        return if (value.isEmpty()) "null" else value
+    }
 
-        if (add_property_spinner_type.selectedItem.toString() != "Property type" && !add_property_editText_price.text.isEmpty() &&
-                !add_property_editText_surface.text.isEmpty() && !add_property_editText_roomNumber.text.isEmpty() && !add_property_editText_bedrooms.text.isEmpty() &&
-                !add_property_editText_description.text.isEmpty() && !pictureList.isEmpty() && !add_property_editText_address.text.isEmpty() &&
-                !add_property_editText_zipCode.text.isEmpty() && !add_property_editText_pointOfInterest.text.isEmpty() &&
-                !add_property_editText_realEstateAgent.text.isEmpty()) {
-            allComplete = true
-        }
-        return allComplete
+    private fun propertyInfoEmptyInt(value: String): Int{
+        return if (value.isEmpty()) 0 else value.toInt()
+    }
+
+    private fun propertyInfoEmptyPicture(value: List<Picture>): String{
+        return if (value.isEmpty()) "null" else value[0].url
     }
 
     //PICTURE
@@ -295,13 +284,13 @@ class AddPropertyFragment : Fragment(){
     }
 
     //EDIT PICTURE
-    private fun clickOnPicture(pictureId : Int){
+    private fun clickOnPicture(pictureId : Int, realId: Long){
         val builder = AlertDialog.Builder(context!!)
                 .setItems(arrayClickOnPicture
                 ) { dialog, which ->
                     when(which){
                         0 -> editPicture(pictureId)
-                        1 -> deletePicture(pictureId)
+                        1 -> deletePicture(pictureId, realId)
                     }
                 }
         builder.create().show()
@@ -349,13 +338,23 @@ class AddPropertyFragment : Fragment(){
         alertDialog.show()
     }
 
+    private fun getGoodPicture(pictureId: Int): Int{
+        var result: Int = pictureId
+        for (picture in pictureList){
+            if (picture.id.toInt() == pictureId) result = pictureList.indexOf(picture)
+        }
+        return result
+    }
+
     private fun replacePicture(pictureId: Int){
         pictureList[pictureId].url = uriPictureSelected.toString()
     }
 
-    private fun deletePicture(pictureId: Int){
+    private fun deletePicture(pictureId: Int, realId: Long){
         pictureList.removeAt(pictureId)
         adapter.notifyDataSetChanged()
+        pictureToDeleteIdList.add(realId)
+        allowPictureDelete = true
     }
 
     //TAKE PICTURE
@@ -430,10 +429,6 @@ class AddPropertyFragment : Fragment(){
             "Duplex" -> value = 7
         }
         return value
-    }
-
-    private fun getGoodIndexOfPictureListWhenEditProperty(pictureId: Int, pictureListFirstIdToSubtractAtPictureId: Int): Int{
-        return pictureId - pictureListFirstIdToSubtractAtPictureId
     }
 
     //LAUNCH

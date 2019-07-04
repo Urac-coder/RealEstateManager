@@ -26,7 +26,6 @@ import android.R.attr.key
 class MainFragment : Fragment(){
 
     lateinit var adapter: MainFragmentAdapter
-    //var propertyList = listOf<Property>()
     lateinit var propertyViewModel: PropertyViewModel
 
     companion object {

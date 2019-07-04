@@ -80,8 +80,12 @@ class DisplayPropertyFragment : Fragment() {
     // ---------------------
 
     private fun displayProperty(property: Property){
-        Glide.with(context!!).load(this.pictureList[0].url).into(display_property_pic)
-        display_property_picDescription.text = this.pictureList[0].description
+        if (!pictureList.isEmpty()) {
+            display_property_pic_view.visibility = View.VISIBLE
+            Glide.with(context!!).load(this.pictureList[0].url).into(display_property_pic)
+            display_property_picDescription.text = this.pictureList[0].description
+        } else display_property_pic_view.visibility = View.INVISIBLE
+
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
@@ -93,8 +97,20 @@ class DisplayPropertyFragment : Fragment() {
         propertyAlwaysAvailable(property.statusAvailable)
         display_property_textView_RealEstateAgent.text = property.realEstateAgent
         display_property_textView_entryDate.text = property.entryDate
-        display_property_textView_saleDate.text = property.saleDate
-        Glide.with(context!!).load(getUrlMap(property)).into(display_property_map)
+
+        if (property.saleDate != "null") {
+            display_property_textView_saleDate.visibility = View.VISIBLE
+            display_property_textView_titleSaleDate.visibility = View.VISIBLE
+            display_property_textView_saleDate.text = property.saleDate
+        } else {
+            display_property_textView_saleDate.visibility = View.INVISIBLE
+            display_property_textView_titleSaleDate.visibility = View.INVISIBLE
+        }
+
+        if (property.address != "null" || property.city != "null"){
+            display_property_map.visibility = View.VISIBLE
+            Glide.with(context!!).load(getUrlMap(property)).into(display_property_map)
+        } else display_property_map.visibility = View.INVISIBLE
     }
 
     private fun getUrlMap(property: Property): String{

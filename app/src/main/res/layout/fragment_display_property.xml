@@ -13,9 +13,15 @@
         android:scrollbars="none"
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/display_property_pic_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/display_property_pic"
@@ -62,6 +68,12 @@
                 android:layout_below="@+id/display_property_textView_nbPicture"
                 />
 
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/display_property_textView_price"
                 android:layout_width="wrap_content"
@@ -69,7 +81,6 @@
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_below="@+id/display_property_textView_nbPicture"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"
                 android:text="100,000,000 $"
@@ -91,7 +102,6 @@
                 android:id="@+id/display_property_textView_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/display_property_textView_nbPicture"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="20dp"
                 android:textSize="16dp"
@@ -273,9 +283,9 @@
                 android:scaleType="centerCrop"
                 />
 
+            </RelativeLayout>
 
-
-        </RelativeLayout>
+        </LinearLayout>
 
     </ScrollView>
 
