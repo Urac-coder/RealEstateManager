@@ -477,7 +477,22 @@ class AddPropertyFragment : Fragment(){
 
     //NOTIFICATION
     private fun displayNotificationAfterAddProperty() {
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
 
+
+        val datePicker = DatePickerDialog(activity, R.style.DatePickerTheme ,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    var month: Int = monthOfYear + 1
+
+                    saleDate = ("$dayOfMonth/$month/$year")
+                    add_property_btn_sale.text = "Sold : $saleDate"
+                    propertyAvailable = false
+                }, year, month, day)
+
+        datePicker.show()
     }
 
     //LAUNCH
