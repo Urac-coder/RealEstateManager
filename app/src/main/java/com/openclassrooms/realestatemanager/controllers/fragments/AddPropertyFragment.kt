@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,26 +21,38 @@ import com.bumptech.glide.Glide
 import android.content.Intent
 import pub.devrel.easypermissions.EasyPermissions
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.provider.MediaStore
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.utils.longToast
 import android.content.pm.PackageManager
+import android.media.RingtoneManager
+import android.os.Build
 import android.os.Environment
+import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_add_property_date_picker.*
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.fragment_add_property_date_picker.view.*
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
 
 class AddPropertyFragment : Fragment(){
@@ -51,6 +64,8 @@ class AddPropertyFragment : Fragment(){
     private var iterator: Long = 0
     private val arrayClickOnPicture = arrayOf("Edit","Delete")
     private var propertyToEditId: Long = 0 // 0 = CREATE PROPERTY else MODIFY PROPERTY
+    private var saleDate: String = "null"
+    private var  propertyAvailable: Boolean = true
 
     //PICTURE
     private val PERMS = Manifest.permission.READ_EXTERNAL_STORAGE
@@ -91,8 +106,7 @@ class AddPropertyFragment : Fragment(){
             launchMainFragment()
 
             if (propertyToEditId == 0L) {
-                context!!.longToast("Congratulations you have successfully registered a new property")
-                context!!.longToast("Congratulations you have successfully registered a new property")
+                displayNotificationAfterAddProperty()
             } else{
                 if (allowPictureDelete) {
                     for (pictureToDeleteId  in pictureToDeleteIdList){
@@ -101,6 +115,10 @@ class AddPropertyFragment : Fragment(){
                     allowPictureDelete = false
                 }
             }
+        }
+
+        add_property_btn_sale.setOnClickListener {
+            selectSaleDate()
         }
 
         add_property_btn_importPicture.setOnClickListener{
@@ -153,6 +171,7 @@ class AddPropertyFragment : Fragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
+                    context!!.toast(response.id.toString())
                     clickOnPicture(getGoodPicture(response.id.toInt()), response.id)
                 }
     }
@@ -207,6 +226,10 @@ class AddPropertyFragment : Fragment(){
     // UTILS
     // ---------------------
 
+    private fun selectSaleDate(){
+        
+    }
+
     //INSERT
     private fun insertProperty(){
         property = Property(propertyToEditId,
@@ -220,9 +243,10 @@ class AddPropertyFragment : Fragment(){
                 propertyInfoEmptyString(add_property_editText_address.text.toString()),
                 propertyInfoEmptyString(add_property_editText_city.text.toString()),
                 propertyInfoEmptyInt(add_property_editText_zipCode.text.toString()),
-                propertyInfoEmptyString(add_property_editText_pointOfInterest.text.toString()), true,
+                propertyInfoEmptyString(add_property_editText_pointOfInterest.text.toString()),
+                propertyAvailable,
                 Utils.getTodayDate(),
-                "null",
+                saleDate,
                 propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()))
 
         if (propertyToEditId == 0L){
@@ -417,6 +441,7 @@ class AddPropertyFragment : Fragment(){
         add_property_editText_pointOfInterest.setText(property.pointOfInterest)
         add_property_editText_realEstateAgent.setText(property.realEstateAgent)
 
+        if (property.saleDate == "null") add_property_btn_sale.text = "Sale" else add_property_btn_sale.text = "Sold : ${property.saleDate}"
         add_property_btn_save.text = "Save modification"
     }
 
@@ -433,6 +458,49 @@ class AddPropertyFragment : Fragment(){
             "Duplex" -> value = 7
         }
         return value
+    }
+
+    //NOTIFICATION
+    private fun displayNotificationAfterAddProperty() {
+
+        val NOTIFICATION_ID: Int = 7
+        val NOTIFICATION_TAG: String = "REALESTATEMANAGER"
+
+        // 1 - Create an Intent that will be shown when user will click on the Notification
+        var intent: Intent = Intent(context, MainActivity::class.java)
+        var pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+
+        // 2 - Create a Style for the Notification
+        var inboxStyle:  NotificationCompat.InboxStyle = NotificationCompat.InboxStyle()
+        inboxStyle.setBigContentTitle("Congratulations")
+        inboxStyle.addLine("You have added a new property")
+
+        // 3 - Create a Channel (Android 8)
+        var channelId = "channel_id"
+
+        // 4 - Build a Notification object
+        var notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, channelId)
+                        .setSmallIcon(R.drawable.ic_add_24)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText("Congratulations")
+                        .setAutoCancel(true)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(pendingIntent)
+                        .setStyle(inboxStyle)
+
+        // 5 - Add the Notification to the Notification Manager and show it.
+        var notificationManager: NotificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // 6 - Support Version >= Android 8
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var channelName: CharSequence = "You have added a new property"
+            var importance: Int = NotificationManager.IMPORTANCE_HIGH
+            var mChannel: NotificationChannel = NotificationChannel(channelId, channelName, importance)
+            notificationManager.createNotificationChannel(mChannel)
+        }
+
+        // 7 - Show notification
+        notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build())
     }
 
     //LAUNCH

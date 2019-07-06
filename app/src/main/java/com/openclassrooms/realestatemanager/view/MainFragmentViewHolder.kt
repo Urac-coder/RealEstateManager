@@ -15,6 +15,7 @@ import com.openclassrooms.realestatemanager.models.Property
 import java.lang.ref.WeakReference
 import kotlinx.android.synthetic.main.fragment_main_item.*
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import android.view.ViewGroup
 import androidx.core.app.NotificationCompat.getCategory
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.models.Picture
@@ -23,6 +24,7 @@ import java.text.DecimalFormat
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.injection.ViewModelFactory
+import kotlinx.android.synthetic.main.fragment_display_property.*
 
 class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -33,6 +35,14 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         view.main_fragment_info.text = property.type + " - " + property.area + " m²" + " - " + property.nbRooms + " rooms"
         view.main_fragment_city.text = property.city + " (" + property.zipCode + ")"
         view.main_fragment_price.text = decimalFormat.format(property.price) + " $"
-        Glide.with(itemView).load(property.picture).into(view.main_fragment_item_pic)
+
+        if (property.picture != "null"){
+            Glide.with(itemView).load(property.picture).into(view.main_fragment_item_pic)
+            view.main_fragment_item_cardView.visibility = View.VISIBLE
+        } else {
+            try {
+                (view.main_fragment_item_cardView.parent as ViewGroup).removeView(view.main_fragment_item_cardView)
+            }catch (e: Exception){}
+        }
     }
 }

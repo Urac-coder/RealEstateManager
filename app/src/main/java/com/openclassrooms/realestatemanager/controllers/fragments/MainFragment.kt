@@ -22,6 +22,10 @@ import android.content.Intent
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport
 import com.openclassrooms.realestatemanager.utils.toast
 import android.R.attr.key
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_display_property.*
+import android.view.ViewManager
+import java.lang.Exception
 
 class MainFragment : Fragment(){
 
@@ -71,7 +75,14 @@ class MainFragment : Fragment(){
     }
 
     private fun updatePropertyList(properties: List<Property>) {
-        this.adapter.updateData(properties)
+        if (!properties.isEmpty()) {
+            try {
+                (main_fragment_addInfo.parent as ViewGroup).removeView(main_fragment_addInfo)
+            } catch (e: Exception){}
+            this.adapter.updateData(properties)
+        } else {
+            main_fragment_addInfo.visibility = View.VISIBLE
+        }
     }
 
     // ---------------------

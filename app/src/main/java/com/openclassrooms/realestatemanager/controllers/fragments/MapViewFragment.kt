@@ -164,7 +164,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
     // UTILS
     // ---------------------
 
-    private fun getLatLngToAddress(location: String): Address {
+    private fun getLatLngToAddress(location: String): Address? {
         var address: Address? = null
 
         var gc: Geocoder  = Geocoder(context)
@@ -173,7 +173,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         for (a: Address in addresses) {
             if (a.hasLatitude() && a.hasLongitude()) address = a
         }
-        return address!!
+        return address
     }
 
     private fun getAllPropertyAndDisplayWithMarker() {
@@ -184,9 +184,13 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         var address: Address? = null
 
         for (property in propertyList){
-            address = getLatLngToAddress(property.address + "," + property.city)
-            val addressToDisplay = LatLng(address!!.latitude, address!!.longitude)
-            mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
+            if (property.address != "null" || property.city != "null"){
+                address = getLatLngToAddress(property.address + "," + property.city)
+                if (address != null){
+                    val addressToDisplay = LatLng(address.latitude, address.longitude)
+                    mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
+                }
+            }
         }
     }
 
