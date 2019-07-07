@@ -9,7 +9,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/add_property_container"
@@ -311,6 +312,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/add_property_title_realEstateAgent"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/border"
                 android:padding="10dp"
                 android:hint="stephane plaza"
@@ -327,11 +329,12 @@
                     android:id="@+id/add_property_btn_sale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
                     android:text="SALE"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
-                    android:textColor="@android:color/white"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@android:color/black"
                     android:background="@drawable/border_btn"/>
 
             </RelativeLayout>
@@ -344,12 +347,12 @@
                     android:id="@+id/add_property_btn_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="30dp"
                     android:text="SAVE PROPERTY"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:background="@drawable/border_btn"/>
 
             </RelativeLayout>

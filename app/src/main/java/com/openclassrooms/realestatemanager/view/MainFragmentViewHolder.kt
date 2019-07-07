@@ -16,6 +16,7 @@ import java.lang.ref.WeakReference
 import kotlinx.android.synthetic.main.fragment_main_item.*
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat.getCategory
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.models.Picture
@@ -37,8 +38,9 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         view.main_fragment_price.text = decimalFormat.format(property.price) + " $"
 
         if (property.picture != "null"){
+            //var test = itemView.findViewById(R.id.main_fragment_item_cardView) as CardView
+            if (view.main_fragment_item_cardView == null) view.fragment_main_item_view.addView(view.main_fragment_item_cardView)
             Glide.with(itemView).load(property.picture).into(view.main_fragment_item_pic)
-            view.main_fragment_item_cardView.visibility = View.VISIBLE
         } else {
             try {
                 (view.main_fragment_item_cardView.parent as ViewGroup).removeView(view.main_fragment_item_cardView)

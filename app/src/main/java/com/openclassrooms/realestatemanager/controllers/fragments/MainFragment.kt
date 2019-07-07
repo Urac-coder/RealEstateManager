@@ -70,6 +70,7 @@ class MainFragment : Fragment(){
         ItemClickSupport.addTo(main_fragment_recyclerView, R.layout.fragment_main)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getProperty(position)
+                    context!!.toast(response.picture)
                     launchDisplayPropertyFragment(response.id.toString().toLong())
                 }
     }

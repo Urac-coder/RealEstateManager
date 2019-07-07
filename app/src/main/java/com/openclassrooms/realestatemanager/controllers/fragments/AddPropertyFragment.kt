@@ -477,22 +477,45 @@ class AddPropertyFragment : Fragment(){
 
     //NOTIFICATION
     private fun displayNotificationAfterAddProperty() {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
 
+        val NOTIFICATION_ID: Int = 7
+        val NOTIFICATION_TAG: String = "REALESTATEMANAGER"
 
-        val datePicker = DatePickerDialog(activity, R.style.DatePickerTheme ,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    var month: Int = monthOfYear + 1
+        // 1 - Create an Intent that will be shown when user will click on the Notification
+        var intent: Intent = Intent(context, MainActivity::class.java)
+        var pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-                    saleDate = ("$dayOfMonth/$month/$year")
-                    add_property_btn_sale.text = "Sold : $saleDate"
-                    propertyAvailable = false
-                }, year, month, day)
+        // 2 - Create a Style for the Notification
+        var inboxStyle:  NotificationCompat.InboxStyle = NotificationCompat.InboxStyle()
+        inboxStyle.setBigContentTitle("Congratulations")
+        inboxStyle.addLine("You have added a new property")
 
-        datePicker.show()
+        // 3 - Create a Channel (Android 8)
+        var channelId = "channel_id"
+
+        // 4 - Build a Notification object
+        var notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, channelId)
+                        .setSmallIcon(R.drawable.ic_add_24)
+                        .setContentTitle(getString(R.string.app_name))
+                        .setContentText("Congratulations")
+                        .setAutoCancel(true)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setContentIntent(pendingIntent)
+                        .setStyle(inboxStyle)
+
+        // 5 - Add the Notification to the Notification Manager and show it.
+        var notificationManager: NotificationManager = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        // 6 - Support Version >= Android 8
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var channelName: CharSequence = "You have added a new property"
+            var importance: Int = NotificationManager.IMPORTANCE_HIGH
+            var mChannel: NotificationChannel = NotificationChannel(channelId, channelName, importance)
+            notificationManager.createNotificationChannel(mChannel)
+        }
+
+        // 7 - Show notification
+        notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID, notificationBuilder.build())
     }
 
     //LAUNCH
