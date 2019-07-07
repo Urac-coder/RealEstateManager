@@ -38,7 +38,6 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         view.main_fragment_price.text = decimalFormat.format(property.price) + " $"
 
         if (property.picture != "null"){
-            //var test = itemView.findViewById(R.id.main_fragment_item_cardView) as CardView
             if (view.main_fragment_item_cardView == null) view.fragment_main_item_view.addView(view.main_fragment_item_cardView)
             Glide.with(itemView).load(property.picture).into(view.main_fragment_item_pic)
         } else {
