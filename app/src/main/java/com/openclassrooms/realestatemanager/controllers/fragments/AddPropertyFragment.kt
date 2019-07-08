@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.models.Property
-import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import kotlinx.android.synthetic.main.fragment_add_property.*
 import androidx.lifecycle.Observer
@@ -24,7 +23,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.provider.MediaStore
 import com.openclassrooms.realestatemanager.models.Picture
-import com.openclassrooms.realestatemanager.utils.longToast
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
@@ -38,8 +36,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
-import com.openclassrooms.realestatemanager.utils.ItemClickSupport
-import com.openclassrooms.realestatemanager.utils.Utils
+import com.openclassrooms.realestatemanager.utils.*
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_property_date_picker.*
@@ -98,7 +95,7 @@ class AddPropertyFragment : Fragment(){
             getPictureListToEdit()
             add_property_btn_sale.visibility = View.VISIBLE
         } else{
-            (add_property_btn_sale.parent as ViewGroup).removeView(add_property_btn_sale)
+            add_property_btn_sale.visibility = View.GONE
         }
 
         add_property_btn_save.setOnClickListener{
@@ -303,7 +300,7 @@ class AddPropertyFragment : Fragment(){
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.fragment_add_property_description, null)
         dialogBuilder.setView(dialogView)
-        dialogBuilder.setTitle("Enter picture description")
+        dialogBuilder.setTitle("Entre une déscription")
 
         dialogBuilder.setPositiveButton("save") { dialog, id ->
 
@@ -456,8 +453,8 @@ class AddPropertyFragment : Fragment(){
         add_property_editText_pointOfInterest.setText(property.pointOfInterest)
         add_property_editText_realEstateAgent.setText(property.realEstateAgent)
 
-        if (property.saleDate == "null") add_property_btn_sale.text = "Sale" else add_property_btn_sale.text = "Sold : ${property.saleDate}"
-        add_property_btn_save.text = "Save modification"
+        if (property.saleDate == "null") add_property_btn_sale.text = "VENDU" else add_property_btn_sale.text = "Sold : ${property.saleDate}"
+        add_property_btn_save.text = "ENREGISTRER"
     }
 
     private fun getGoodItemOfSpinner(item: String):Int{
@@ -487,8 +484,8 @@ class AddPropertyFragment : Fragment(){
 
         // 2 - Create a Style for the Notification
         var inboxStyle:  NotificationCompat.InboxStyle = NotificationCompat.InboxStyle()
-        inboxStyle.setBigContentTitle("Congratulations")
-        inboxStyle.addLine("You have added a new property")
+        inboxStyle.setBigContentTitle("Félicitation")
+        inboxStyle.addLine("Vous avez ajouté un nouveau bien")
 
         // 3 - Create a Channel (Android 8)
         var channelId = "channel_id"
@@ -497,7 +494,7 @@ class AddPropertyFragment : Fragment(){
         var notificationBuilder: NotificationCompat.Builder = NotificationCompat.Builder(context!!, channelId)
                         .setSmallIcon(R.drawable.ic_add_24)
                         .setContentTitle(getString(R.string.app_name))
-                        .setContentText("Congratulations")
+                        .setContentText("Félicitation")
                         .setAutoCancel(true)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                         .setContentIntent(pendingIntent)
@@ -508,7 +505,7 @@ class AddPropertyFragment : Fragment(){
 
         // 6 - Support Version >= Android 8
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            var channelName: CharSequence = "You have added a new property"
+            var channelName: CharSequence = "Vous avez ajouté un nouveau bien"
             var importance: Int = NotificationManager.IMPORTANCE_HIGH
             var mChannel: NotificationChannel = NotificationChannel(channelId, channelName, importance)
             notificationManager.createNotificationChannel(mChannel)
@@ -520,9 +517,16 @@ class AddPropertyFragment : Fragment(){
 
     //LAUNCH
     private fun launchMainFragment() {
+        var frameLayout: Int = R.id.main_activity_frame
+        if (isTablet(context!!)) {
+            activity!!.main_activity_frame_tablet.visibility =  View.INVISIBLE
+            frameLayout = R.id.main_activity_frame_left
+        }
+
+
         val mainFragment = MainFragment()
         activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_activity_frame, mainFragment, "findThisFragment")
+                .replace(frameLayout, mainFragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
     }

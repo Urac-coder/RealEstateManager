@@ -16,20 +16,18 @@
                 android:id="@+id/fragment_loan_simulator_title_loanValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/separate"
                 android:textColor="@android:color/black"
                 android:textSize="17dp"
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="value of the loan ($)"
+                android:text="Valeur du prêt €"
                 />
 
             <TextView
                 android:id="@+id/fragment_loan_simulator_loanValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/separate"
                 android:layout_alignParentRight="true"
                 android:textColor="@android:color/black"
                 android:textSize="17dp"
@@ -49,7 +47,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="Monthly fees ($)"
+                android:text="Mensualités €"
                 />
 
             <TextView
@@ -76,7 +74,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="interest ($)"
+                android:text="intérêts €"
                 />
 
             <TextView

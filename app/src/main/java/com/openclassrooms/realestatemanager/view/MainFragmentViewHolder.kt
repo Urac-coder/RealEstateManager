@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.injection.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_display_property.*
+import java.lang.Exception
 
 class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -35,15 +36,13 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun updateWithProperty(property: Property) {
         view.main_fragment_info.text = property.type + " - " + property.area + " m²" + " - " + property.nbRooms + " rooms"
         view.main_fragment_city.text = property.city + " (" + property.zipCode + ")"
-        view.main_fragment_price.text = decimalFormat.format(property.price) + " $"
+        view.main_fragment_price.text = decimalFormat.format(property.price) + " €"
 
         if (property.picture != "null"){
-            if (view.main_fragment_item_cardView == null) view.fragment_main_item_view.addView(view.main_fragment_item_cardView)
+            view.main_fragment_item_cardView.visibility = View.VISIBLE
             Glide.with(itemView).load(property.picture).into(view.main_fragment_item_pic)
         } else {
-            try {
-                (view.main_fragment_item_cardView.parent as ViewGroup).removeView(view.main_fragment_item_cardView)
-            }catch (e: Exception){}
+                    view.main_fragment_item_cardView.visibility = View.GONE
         }
     }
 }

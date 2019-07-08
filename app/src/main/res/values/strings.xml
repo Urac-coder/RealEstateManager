@@ -3,14 +3,19 @@
     <string name="propertyType">choose the type of property</string>
 
     <string-array name="property_type">
-        <item>Property type</item>
+        <item>type de bien</item>
         <item>Loft</item>
-        <item>Manor</item>
-        <item>House</item>
-        <item>Residence</item>
-        <item>Hotel</item>
-        <item>Flat</item>
+        <item>Manoir</item>
+        <item>Maison</item>
+        <item>Résidence</item>
+        <item>Hôtel</item>
+        <item>Appartement</item>
         <item>Duplex</item>
+    </string-array>
+
+    <string-array name="Property_available">
+        <item>A vendre</item>
+        <item>Vendu</item>
     </string-array>
 
 </resources>

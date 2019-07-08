@@ -34,6 +34,8 @@ import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.internal.IGoogleMapDelegate
 import com.openclassrooms.realestatemanager.injection.Injection
+import com.openclassrooms.realestatemanager.utils.isTablet
+import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.IOException
 
@@ -195,12 +197,18 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
     }
 
     private fun launchDisplayPropertyFragment(propertyId: Long) {
+        var frameLayout: Int = R.id.main_activity_frame
+        if (isTablet(context!!)){
+            activity!!.main_activity_frame_tablet.visibility = View.VISIBLE
+            frameLayout = R.id.main_activity_frame_tablet
+        }
+
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
         bundle.putLong("PROPERTY_ID", propertyId)
         fragment.arguments = bundle
         activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_activity_frame, fragment, "findThisFragment")
+                .replace(frameLayout, fragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
     }

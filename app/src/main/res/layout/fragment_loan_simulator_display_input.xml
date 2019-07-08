@@ -16,7 +16,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
-        android:text="Price of property ($)"/>
+        android:text="Pix du bien €"/>
 
     <EditText
         android:id="@+id/fragment_loan_simulator_editText_price"
@@ -42,7 +42,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
-        android:text="Rate  (%)"/>
+        android:text="Taux %"/>
 
     <EditText
         android:id="@+id/fragment_loan_simulator_editText_rate"
@@ -70,7 +70,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="30dp"
-        android:text="Duration (years)"/>
+        android:text="Nombre d'années"/>
 
     <EditText
         android:id="@+id/fragment_loan_simulator_editText_duration"
@@ -98,7 +98,7 @@
         android:textStyle="bold"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="30dp"
-        android:text="Contribution ($) : "
+        android:text="Apport €"
         />
 
     <TextView

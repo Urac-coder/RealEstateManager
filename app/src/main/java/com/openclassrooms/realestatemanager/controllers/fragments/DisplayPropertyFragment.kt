@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
 import android.view.ViewGroup
+import com.openclassrooms.realestatemanager.utils.isTablet
+import kotlinx.android.synthetic.main.activity_main.*
 
 class DisplayPropertyFragment : Fragment() {
     lateinit var propertyViewModel: PropertyViewModel
@@ -80,19 +83,21 @@ class DisplayPropertyFragment : Fragment() {
     // UTILS
     // ---------------------
 
+    @SuppressLint("SetTextI18n")
     private fun displayProperty(property: Property){
         if (!pictureList.isEmpty()) {
             display_property_pic_view.visibility = View.VISIBLE
             Glide.with(context!!).load(this.pictureList[0].url).into(display_property_pic)
             display_property_picDescription.text = this.pictureList[0].description
         } else {
-            (display_property_pic_view.parent as ViewGroup).removeView(display_property_pic_view)
+            display_property_pic_view.visibility = View.GONE
         }
 
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
         display_property_textView_price.text = decimalFormat.format(property.price) + "$"
+        display_property_textView_cityZipCop.text = property.city + "  (" + property.zipCode + ")"
         display_property_textView_area.text = property.area.toString() + "m2"
         display_property_textView_nbRoom.text = property.nbRooms.toString()
         display_property_textView_bedroom.text = property.bedrooms.toString()
@@ -113,7 +118,7 @@ class DisplayPropertyFragment : Fragment() {
         if (property.address != "null" || property.city != "null"){
             display_property_map.visibility = View.VISIBLE
             Glide.with(context!!).load(getUrlMap(property)).into(display_property_map)
-        } else (display_property_map.parent as ViewGroup).removeView(display_property_map)
+        } else display_property_map.visibility = View.GONE
     }
 
     private fun getUrlMap(property: Property): String{
@@ -126,10 +131,10 @@ class DisplayPropertyFragment : Fragment() {
     private fun propertyAlwaysAvailable(available: Boolean){
         if (available){
             display_property_textView_alwaysAvailable.setTextColor(Color.parseColor("#00b800"))
-            display_property_textView_alwaysAvailable.text = "The property is always available"
+            display_property_textView_alwaysAvailable.text = "Le bien est toujours disponnible"
         } else{
             display_property_textView_alwaysAvailable.setTextColor(Color.RED)
-            display_property_textView_alwaysAvailable.text = "The property is no longer available"
+            display_property_textView_alwaysAvailable.text = "Le bien n'est plus disponnible"
         }
     }
 
@@ -158,12 +163,18 @@ class DisplayPropertyFragment : Fragment() {
 
     //LAUNCH
     private fun launchAddPropertyFragmentEditMode(propertyId: Long) {
+        var frameLayout: Int = R.id.main_activity_frame
+        if (isTablet(context!!)){
+            activity!!.main_activity_frame_tablet.visibility = View.VISIBLE
+            frameLayout = R.id.main_activity_frame_tablet
+        }
+
         val fragment = AddPropertyFragment()
         val bundle = Bundle()
         bundle.putLong("PROPERTY_ID", propertyId)
         fragment.arguments = bundle
         activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_activity_frame, fragment, "findThisFragment")
+                .replace(frameLayout, fragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
     }

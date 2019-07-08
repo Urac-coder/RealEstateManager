@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.utils
 
 import android.content.Context
+import android.content.res.Configuration
 import android.text.TextUtils.replace
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,3 +25,7 @@ fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
 
 fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 fun Context.longToast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+fun isTablet(context: Context): Boolean {
+    return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
+}

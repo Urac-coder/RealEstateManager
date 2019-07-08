@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/BLUE"
             android:textStyle="bold"
-            android:text="ROOMS"
+            android:text="PIECE"
             android:layout_centerHorizontal="true"/>
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/BLUE"
             android:textStyle="bold"
-            android:text="BEDROOMS"
+            android:text="CHAMBRE"
             android:layout_centerHorizontal="true"/>
 
         <TextView

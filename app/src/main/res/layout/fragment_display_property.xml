@@ -58,7 +58,7 @@
                 android:layout_below="@+id/display_property_pic"
                 android:layout_margin="10dp"
                 android:layout_alignParentRight="true"
-                android:text="Click on the image to scroll the next"
+                android:text="Cliquez sur l'image pour faire défiler la suivante"
                 />
 
             <View
@@ -87,7 +87,7 @@
                 />
 
             <TextView
-                android:id="@+id/display_property_textView_cytiZipCop"
+                android:id="@+id/display_property_textView_cityZipCop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:layout_below="@+id/display_property_textView_cytiZipCop"
+                android:layout_below="@+id/display_property_textView_cityZipCop"
                 />
 
             <TextView
@@ -139,7 +139,7 @@
                 android:layout_marginLeft="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Real estate agent :"/>
+                android:text="Agent immobilier :"/>
 
             <TextView
                 android:id="@+id/display_property_textView_RealEstateAgent"
@@ -161,7 +161,7 @@
                 android:layout_marginLeft="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Entry date :"/>
+                android:text="Date d'entrée :"/>
 
             <TextView
                 android:id="@+id/display_property_textView_entryDate"
@@ -183,7 +183,7 @@
                 android:layout_marginLeft="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Sale date :"/>
+                android:text="Date de vente :"/>
 
             <TextView
                 android:id="@+id/display_property_textView_saleDate"
@@ -206,7 +206,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:textSize="20dp"
-                android:text="Description"/>
+                android:text="Déscription"/>
 
             <TextView
                 android:id="@+id/display_property_textView_description"
@@ -227,7 +227,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:textSize="20dp"
-                android:text="Location"/>
+                android:text="Localisation"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -274,7 +274,7 @@
                     android:layout_marginLeft="20dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:text="Point of interest :"/>
+                    android:text="Points d'intérêts :"/>
 
                 <TextView
                     android:id="@+id/display_property_textView_pointOfInterest"

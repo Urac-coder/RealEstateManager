@@ -25,7 +25,16 @@ import android.R.attr.key
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import android.view.ViewManager
+import android.widget.FrameLayout
+import com.openclassrooms.realestatemanager.utils.addFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
+import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
+import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
+import android.content.Context
+import android.content.res.Configuration
+import com.openclassrooms.realestatemanager.utils.isTablet
+
 
 class MainFragment : Fragment(){
 
@@ -70,7 +79,6 @@ class MainFragment : Fragment(){
         ItemClickSupport.addTo(main_fragment_recyclerView, R.layout.fragment_main)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getProperty(position)
-                    context!!.toast(response.picture)
                     launchDisplayPropertyFragment(response.id.toString().toLong())
                 }
     }
@@ -78,7 +86,7 @@ class MainFragment : Fragment(){
     private fun updatePropertyList(properties: List<Property>) {
         if (!properties.isEmpty()) {
             try {
-                (main_fragment_addInfo.parent as ViewGroup).removeView(main_fragment_addInfo)
+                main_fragment_addInfo.visibility  = View.GONE
             } catch (e: Exception){}
             this.adapter.updateData(properties)
         } else {
@@ -95,13 +103,16 @@ class MainFragment : Fragment(){
     }
 
     private fun launchDisplayPropertyFragment(propertyId: Long) {
+        var frameLayout: Int = R.id.main_activity_frame
+        if (isTablet(context!!)) frameLayout = R.id.main_activity_frame_right
+
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
         bundle.putLong("PROPERTY_ID", propertyId)
         fragment.arguments = bundle
-        activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.main_activity_frame, fragment, "findThisFragment")
-                .addToBackStack(null)
-                .commit()
+            activity!!.supportFragmentManager.beginTransaction()
+                    .replace(frameLayout, fragment, "findThisFragment")
+                    .addToBackStack(null)
+                    .commit()
     }
 }

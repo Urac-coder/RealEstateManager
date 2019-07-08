@@ -30,7 +30,7 @@
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Select type of property"/>
+                android:text="Selectionne le type de bien"/>
 
             <Spinner
                 android:id="@+id/add_property_spinner_type"
@@ -52,7 +52,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_spinner_type"
-                android:text="Price ($)"/>
+                android:text="Prix €"/>
 
             <EditText
                 android:id="@+id/add_property_editText_price"
@@ -76,7 +76,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_price"
-                android:text="Surface of the property (m2)"/>
+                android:text="Surface du bien m²"/>
 
             <EditText
                 android:id="@+id/add_property_editText_surface"
@@ -99,7 +99,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_surface"
-                android:text="Number of room"/>
+                android:text="Nombre de pièces"/>
 
             <EditText
                 android:id="@+id/add_property_editText_roomNumber"
@@ -122,7 +122,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_roomNumber"
-                android:text="Number of bedroom"/>
+                android:text="Nombre de chambres"/>
 
             <EditText
                 android:id="@+id/add_property_editText_bedrooms"
@@ -145,7 +145,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_bedrooms"
-                android:text="Description of the property"/>
+                android:text="Description du bien"/>
 
             <EditText
                 android:id="@+id/add_property_editText_description"
@@ -168,7 +168,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_description"
-                android:text="Add picture of your property"/>
+                android:text="Ajoute des photos"/>
 
             <ImageView
                 android:id="@+id/add_property_btn_importPicture"
@@ -176,7 +176,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/add_property_title_picture"
-                android:text="Import picture"
                 android:padding="20dp"
                 app:srcCompat="@drawable/ic_add_picture_storage"
                 android:background="@drawable/border"/>
@@ -189,7 +188,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/add_property_btn_importPicture"
                 android:layout_below="@id/add_property_title_picture"
-                android:text="Take picture"
                 android:padding="20dp"
                 app:srcCompat="@drawable/ic_add_picture_camera"
                 android:background="@drawable/border"/>
@@ -212,7 +210,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_fragment_recyclerView"
-                android:text="Enter the address"/>
+                android:text="Entre l'adresse"/>
 
             <EditText
                 android:id="@+id/add_property_editText_address"
@@ -235,7 +233,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_address"
-                android:text="Enter the city"/>
+                android:text="Entre la ville"/>
 
             <EditText
                 android:id="@+id/add_property_editText_city"
@@ -258,7 +256,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_city"
-                android:text="Enter the zip code"/>
+                android:text="Entre le code postal"/>
 
             <EditText
                 android:id="@+id/add_property_editText_zipCode"
@@ -281,7 +279,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_zipCode"
-                android:text="Enter the point of interest"/>
+                android:text="Entre les points d'intérêts"/>
 
             <EditText
                 android:id="@+id/add_property_editText_pointOfInterest"
@@ -304,7 +302,7 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:layout_below="@id/add_property_editText_pointOfInterest"
-                android:text="Real estate agent"/>
+                android:text="Agent immobilier"/>
 
             <EditText
                 android:id="@+id/add_property_editText_realEstateAgent"
@@ -329,7 +327,7 @@
                     android:id="@+id/add_property_btn_sale"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SALE"
+                    android:text="VENDU"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:layout_marginTop="10dp"
@@ -349,7 +347,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="30dp"
-                    android:text="SAVE PROPERTY"
+                    android:text="ENregistrer"
                     android:layout_marginLeft="50dp"
                     android:layout_marginRight="50dp"
                     android:textColor="@android:color/black"
