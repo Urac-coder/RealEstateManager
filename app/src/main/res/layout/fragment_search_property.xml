@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <TextView
+                    android:id="@+id/search_property_title_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Prix €"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_priceMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_price"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Max"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_separate_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_price"
+                    android:layout_toRightOf="@+id/search_property_editText_priceMin"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:textSize="40dp"
+                    android:textColor="@android:color/black"
+                    android:text="-"
+                    />
+
+                <EditText
+                    android:id="@+id/search_property_editText_priceMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_price"
+                    android:layout_toRightOf="@+id/search_property_separate_price"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Min"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_separate_price"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Surface m²"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_areaMin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_area"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Max"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_separate_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_area"
+                    android:layout_toRightOf="@+id/search_property_editText_areaMin"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
+                    android:textSize="40dp"
+                    android:textColor="@android:color/black"
+                    android:text="-"
+                    />
+
+                <EditText
+                    android:id="@+id/search_property_editText_areaMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_area"
+                    android:layout_toRightOf="@+id/search_property_separate_area"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Min"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_separate_area"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="City"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_city"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Paris"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_editText_city"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Mis sur le marché après le :"/>
+
+                <Button
+                    android:id="@+id/search_property_btn_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_date"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="12/04/1627"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_pointsOfInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_btn_date"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Points d'intérêts"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_pointsOfInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_pointsOfInterest"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Ecole, commerce, parc"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_picNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_editText_pointsOfInterest"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Nombre de photos minimum"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_picNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_picNb"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="5"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_available"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_editText_picNb"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Disponibilité du bien"/>
+
+                <Spinner
+                    android:id="@+id/search_property_spinner_available"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:padding="10dp"
+                    android:layout_below="@+id/search_property_title_available"
+                    android:entries="@array/Property_available"
+                    android:background="@drawable/border"
+                    />
+
+                <Button
+                    android:id="@+id/add_property_btn_sale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_spinner_available"
+                    android:text="Rechercher"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="30dp"
+                    android:textColor="@android:color/black"
+                    android:background="@drawable/border_btn"/>
+
+            </RelativeLayout>
+    </ScrollView>
+</LinearLayout>
