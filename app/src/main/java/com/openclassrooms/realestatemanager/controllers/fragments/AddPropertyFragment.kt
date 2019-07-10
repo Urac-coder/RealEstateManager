@@ -4,9 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.R
@@ -27,6 +24,7 @@ import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Environment
+import android.view.*
 import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -94,7 +92,9 @@ class AddPropertyFragment : Fragment(){
             getPropertyToEdit()
             getPictureListToEdit()
             add_property_btn_sale.visibility = View.VISIBLE
+            setToolbarTitle(activity!!, "Modifier une propriété")
         } else{
+            setToolbarTitle(activity!!, "Ajouter une propriété")
             add_property_btn_sale.visibility = View.GONE
         }
 
@@ -138,6 +138,20 @@ class AddPropertyFragment : Fragment(){
         }
 
         return inflater.inflate(R.layout.fragment_add_property, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar_in_property, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_toolbar_search -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     // ---------------------

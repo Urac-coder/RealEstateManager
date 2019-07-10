@@ -4,6 +4,7 @@ import android.content.ClipData.Item
 import androidx.annotation.Nullable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.database.repositories.PictureDataRepository
 import com.openclassrooms.realestatemanager.database.repositories.PropertyDataRepository
 import com.openclassrooms.realestatemanager.models.Picture
@@ -20,6 +21,10 @@ class PropertyViewModel(private val propertyDataSource: PropertyDataRepository,p
     fun getProperty(propertyId: Long): LiveData<Property> {
         return propertyDataSource.getProperty(propertyId)
     }
+
+    /*fun searchProperty(query: String): LiveData<List<Property>>{
+        return propertyDataSource.searchProperty(query)
+    }*/
 
     fun getAllProperty(): LiveData<List<Property>> {
         return propertyDataSource.getAllProperty()

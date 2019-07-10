@@ -2,49 +2,37 @@ package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.location.*
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.models.Property
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
-import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
-import kotlinx.android.synthetic.main.fragment_map_view.*
 import kotlinx.android.synthetic.main.fragment_map_view.view.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.MapsInitializer
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.internal.IGoogleMapDelegate
 import com.openclassrooms.realestatemanager.injection.Injection
-import com.openclassrooms.realestatemanager.utils.isTablet
+import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.EasyPermissions
-import java.io.IOException
 
 class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.location.LocationListener, GoogleMap.OnMarkerClickListener{
     private lateinit var mMap: GoogleMap
     private var mLocationManager: LocationManager? = null
     internal var mMarker: Marker? = null
 
-    lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var menu: Menu
 
     private val PERMS = Manifest.permission.ACCESS_FINE_LOCATION
     private val LOCATION_PERMS = 100
@@ -84,6 +72,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         askPermissionsAndShowMyLocation()
         getCurrentLocationAndZoomOn()
         getAllPropertyAndDisplayWithMarker()
+        setToolbarTitle(activity!!, "Map")
     }
 
     // ---------------------
@@ -94,6 +83,12 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         val mViewModelFactory = Injection.provideViewModelFactory(context!!)
         this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
     }
+
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_toolbar, menu)
+        if (!Utils.isInternetAvailable()) menu.getItem(1).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_wifi_off)
+        super.onCreateOptionsMenu(menu, inflater)
+    }*/
 
     // --------------------
     // MARKER
@@ -187,11 +182,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
 
         for (property in propertyList){
             if (property.address != "null" || property.city != "null"){
-                address = getLatLngToAddress(property.address + "," + property.city)
-                if (address != null){
-                    val addressToDisplay = LatLng(address.latitude, address.longitude)
-                    mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
-                }
+
+                try {
+                    address = getLatLngToAddress(property.address + "," + property.city)
+                    if (address != null){
+                        val addressToDisplay = LatLng(address.latitude, address.longitude)
+                        mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
+                    }
+                }catch (e: java.lang.Exception) {context!!.longToast("Connexion insuffisante pour afficher les propriétées")}
+
             }
         }
     }

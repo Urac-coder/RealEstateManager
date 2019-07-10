@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,28 +43,18 @@ public class Utils {
     /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param context
      * @return
      */
-    public static Boolean isInternetAvailable(Context context){
-        boolean connexionEnable = true;
-
-        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        connexionEnable = wifi.isWifiEnabled();
-
-        if (!connexionEnable){
-            boolean mobileDataEnabled = false;
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
-            try {
-                Class cmClass = Class.forName(cm.getClass().getName());
-                Method method = cmClass.getDeclaredMethod("getMobileDataEnabled");
-                method.setAccessible(true);
-                mobileDataEnabled = (Boolean)method.invoke(cm);
-                connexionEnable = mobileDataEnabled;
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+    public static Boolean isInternetAvailable(){
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int     exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
         }
-        return connexionEnable;
+        catch (IOException e)          { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
+
+        return false;
     }
 }

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.models.Property
+import com.openclassrooms.realestatemanager.utils.setToolbarTitle
 import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
@@ -40,6 +41,8 @@ class LoanSimulatorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setToolbarTitle(activity!!, "Simulateur de prêt")
 
         fragment_loan_simulator_seekbar_contribution.isEnabled = false
         fragment_loan_simulator_result.visibility = View.GONE

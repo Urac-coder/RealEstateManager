@@ -20,6 +20,10 @@ import java.text.DecimalFormat
 import android.view.ViewGroup
 import com.openclassrooms.realestatemanager.utils.isTablet
 import kotlinx.android.synthetic.main.activity_main.*
+import androidx.core.content.ContextCompat
+import com.openclassrooms.realestatemanager.utils.Utils
+import com.openclassrooms.realestatemanager.utils.displayConnection
+import com.openclassrooms.realestatemanager.utils.setToolbarTitle
 
 class DisplayPropertyFragment : Fragment() {
     lateinit var propertyViewModel: PropertyViewModel
@@ -36,6 +40,8 @@ class DisplayPropertyFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setToolbarTitle(activity!!, "Bien immobilier")
 
         configureViewModel()
         getPictureList()
@@ -69,12 +75,16 @@ class DisplayPropertyFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_toolbar_in_property, menu)
+        displayConnection(menu, context!!, 1)
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
-            R.id.menu_toolbar_edit -> launchAddPropertyFragmentEditMode(propertyId)
+            R.id.menu_toolbar_edit ->{
+                launchAddPropertyFragmentEditMode(propertyId)
+            }
         }
         return super.onOptionsItemSelected(item)
     }

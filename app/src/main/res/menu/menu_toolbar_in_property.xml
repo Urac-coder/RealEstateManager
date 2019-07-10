@@ -11,6 +11,12 @@
         android:title="Edit"/>
 
     <item
+        android:id="@+id/menu_toolbar_connection"
+        android:icon="@drawable/ic_wifi_on"
+        app:showAsAction="ifRoom"
+        android:title="connection"/>
+
+    <item
         android:id="@+id/menu_toolbar_search"
         android:icon="@drawable/ic_search_24"
         app:showAsAction="ifRoom"

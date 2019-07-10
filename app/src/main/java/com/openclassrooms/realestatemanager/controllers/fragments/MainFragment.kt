@@ -19,21 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 import android.content.Intent
-import com.openclassrooms.realestatemanager.utils.ItemClickSupport
-import com.openclassrooms.realestatemanager.utils.toast
 import android.R.attr.key
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import android.view.ViewManager
 import android.widget.FrameLayout
-import com.openclassrooms.realestatemanager.utils.addFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_LARGE
 import android.content.res.Configuration.SCREENLAYOUT_SIZE_MASK
 import android.content.Context
 import android.content.res.Configuration
-import com.openclassrooms.realestatemanager.utils.isTablet
+import androidx.appcompat.widget.Toolbar
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.openclassrooms.realestatemanager.utils.*
 
 
 class MainFragment : Fragment(){
@@ -47,8 +47,11 @@ class MainFragment : Fragment(){
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setToolbarTitle(activity!!, "Accueil")
 
         configureViewModel()
         getAllProperty()
