@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_map_view.*
 import pub.devrel.easypermissions.EasyPermissions
 
 class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.location.LocationListener, GoogleMap.OnMarkerClickListener{
@@ -55,6 +56,8 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
 
         rootView.mapView.getMapAsync(this)
 
+        configureViewDependingConnection(rootView)
+        
         rootView.myLocationButton.setOnClickListener {
             askPermissionsAndShowMyLocation()
             getCurrentLocationAndZoomOn()
@@ -84,11 +87,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
     }
 
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_toolbar, menu)
-        if (!Utils.isInternetAvailable()) menu.getItem(1).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_wifi_off)
-        super.onCreateOptionsMenu(menu, inflater)
-    }*/
+    private fun configureViewDependingConnection(view: View){
+        if (Utils.isInternetAvailable()){
+            view.fragment_map_view_container.visibility = View.VISIBLE
+            view.fragment_map_view_txt_noConnextion.visibility = View.INVISIBLE
+        } else {
+            view.fragment_map_view_container.visibility = View.INVISIBLE
+            view.fragment_map_view_txt_noConnextion.visibility = View.VISIBLE
+        }
+    }
 
     // --------------------
     // MARKER
