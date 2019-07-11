@@ -46,6 +46,8 @@ class DisplayPropertyFragment : Fragment() {
         configureViewModel()
         getPictureList()
 
+        if (!isTablet(context!!)) activity!!.activity_main_bottom_navigation.visibility = View.GONE
+
         display_property_pic.setOnClickListener {
             displayNextPicture()
             displayNbPicture()
@@ -171,7 +173,9 @@ class DisplayPropertyFragment : Fragment() {
         })
     }
 
-    //LAUNCH
+    // ---------------------
+    // LAUNCH
+    // ---------------------
     private fun launchAddPropertyFragmentEditMode(propertyId: Long) {
         var frameLayout: Int = R.id.main_activity_frame
         if (isTablet(context!!)){
@@ -187,5 +191,14 @@ class DisplayPropertyFragment : Fragment() {
                 .replace(frameLayout, fragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
+    }
+
+    // ---------------------
+    // LIFE CYCLE
+    // ---------------------
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity!!.activity_main_bottom_navigation.visibility = View.VISIBLE
     }
 }

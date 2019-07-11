@@ -26,6 +26,8 @@ import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_map_view.*
 import pub.devrel.easypermissions.EasyPermissions
+import android.content.Intent
+import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 
 class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.location.LocationListener, GoogleMap.OnMarkerClickListener{
     private lateinit var mMap: GoogleMap
@@ -57,7 +59,11 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         rootView.mapView.getMapAsync(this)
 
         configureViewDependingConnection(rootView)
-        
+
+        rootView.fragment_map_view_txt_noConnextion.setOnClickListener {
+            configureViewDependingConnection(rootView)
+        }
+
         rootView.myLocationButton.setOnClickListener {
             askPermissionsAndShowMyLocation()
             getCurrentLocationAndZoomOn()
@@ -185,7 +191,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
     }
 
     private fun displayAllPropertyWithMarker(propertyList: List<Property>){
-        var address: Address? = null
+        var address: Address?
 
         for (property in propertyList){
             if (property.address != "null" || property.city != "null"){
@@ -196,17 +202,22 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
                         val addressToDisplay = LatLng(address.latitude, address.longitude)
                         mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
                     }
-                }catch (e: java.lang.Exception) {context!!.longToast("Connexion insuffisante pour afficher les propriétées")}
-
+                }catch (e: java.lang.Exception) {
+                    if (Utils.isInternetAvailable()) restartMainActivityAndStartMap() else context!!.longToast("Connexion insuffisante pour afficher les propriétées")
+                }
             }
         }
     }
+
+    // ---------------------
+    // LAUNCH
+    // ---------------------
 
     private fun launchDisplayPropertyFragment(propertyId: Long) {
         var frameLayout: Int = R.id.main_activity_frame
         if (isTablet(context!!)){
             activity!!.main_activity_frame_tablet.visibility = View.VISIBLE
-            frameLayout = R.id.main_activity_frame_tablet
+            frameLayout = com.openclassrooms.realestatemanager.R.id.main_activity_frame_tablet
         }
 
         val fragment = DisplayPropertyFragment()
@@ -217,5 +228,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
                 .replace(frameLayout, fragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
+    }
+
+    private fun restartMainActivityAndStartMap() {
+        val myIntent = Intent(context, MainActivity::class.java)
+        val bundle = Bundle()
+
+        bundle.putString("startParameter", "launchMap")
+        myIntent.putExtras(bundle)
+
+        this.startActivity(myIntent)
     }
 }

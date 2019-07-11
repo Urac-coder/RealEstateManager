@@ -38,11 +38,11 @@
     <TextView
         android:id="@+id/fragment_map_view_txt_noConnextion"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Vous devez être connecté à une connection internet pour pouvoir afficher la map ! cliquez ici pour actualiser."
+        android:text="Vous devez être connecté à internet pour pouvoir afficher la map ! cliquez ici pour actualiser."
         />
 
 </RelativeLayout>
