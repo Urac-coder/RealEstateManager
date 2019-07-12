@@ -3,6 +3,10 @@ package com.openclassrooms.realestatemanager.models
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import android.content.ClipData.Item
+import android.content.ContentValues
+
+
 
 @Entity (tableName = "Property")
 data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
@@ -20,4 +24,25 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
                     @ColumnInfo (name = "statusAvailable") var statusAvailable: Boolean,
                     @ColumnInfo (name = "entryDate") var entryDate: String,
                     @ColumnInfo (name = "saleDate") var saleDate: String,
-                    @ColumnInfo (name = "realEstateAgent") var realEstateAgent: String)
+                    @ColumnInfo (name = "realEstateAgent") var realEstateAgent: String) {
+
+    /*fun fromContentValues(values: ContentValues): Property {
+        val property: Property = Property()
+        if (values.containsKey("type")) property.type(values.getAsString("type"))
+        if (values.containsKey("price")) property.price(values.getAsInteger("price"))
+        if (values.containsKey("area")) property.area(values.getAsInteger("isSelected"))
+        if (values.containsKey("nbRooms")) property.nbRooms(values.getAsInteger("nbRooms"))
+        if (values.containsKey("bedrooms")) property.bedrooms(values.getAsInteger("bedrooms"))
+        if (values.containsKey("description")) property.description(values.getAsString("description"))
+        if (values.containsKey("picture")) property.picture(values.getAsString("picture"))
+        if (values.containsKey("address")) property.address(values.getAsString("address"))
+        if (values.containsKey("city")) property.city(values.getAsString("city"))
+        if (values.containsKey("zipCode")) property.zipCode(values.getAsInteger("zipCode"))
+        if (values.containsKey("pointOfInterest")) property.pointOfInterest(values.getAsString("pointOfInterest"))
+        if (values.containsKey("statusAvailable")) property.statusAvailable(values.getAsBoolean("statusAvailable"))
+        if (values.containsKey("entryDate")) property.entryDate(values.getAsString("entryDate"))
+        if (values.containsKey("saleDate")) property.saleDate(values.getAsString("saleDate"))
+        if (values.containsKey("realEstateAgent")) property.realEstateAgent(values.getAsString("realEstateAgent"))
+        return property
+    }*/
+}

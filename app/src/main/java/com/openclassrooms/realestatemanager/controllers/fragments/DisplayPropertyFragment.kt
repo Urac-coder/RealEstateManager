@@ -108,7 +108,7 @@ class DisplayPropertyFragment : Fragment() {
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
-        display_property_textView_price.text = decimalFormat.format(property.price) + "$"
+        display_property_textView_price.text = decimalFormat.format(property.price) + "€"
         display_property_textView_cityZipCop.text = property.city + "  (" + property.zipCode + ")"
         display_property_textView_area.text = property.area.toString() + "m2"
         display_property_textView_nbRoom.text = property.nbRooms.toString()

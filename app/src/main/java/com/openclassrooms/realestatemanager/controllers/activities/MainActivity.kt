@@ -24,30 +24,32 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private var menu: Menu? = null
 
-    private val fragment1: Fragment = MainFragment()
+    /*private val fragment1: Fragment = MainFragment()
     private val fragment2: Fragment = AddPropertyFragment()
     private val fragment3: Fragment = MapViewFragment()
     private val fragment4: Fragment = LoanSimulatorFragment()
     private val fragment5: Fragment = SearchPropertyFragment()
 
     private val fm = supportFragmentManager
-    private var active: Fragment = fragment1
+    private var active: Fragment = fragment1*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         configureToolbar()
         configureBottomView()
-        configureFragment()
+        //configureFragment()
 
         val bundle = intent.extras
         var bundleValue: String = ""
         if (bundle != null) bundleValue = bundle.getString("startParameter", "")
 
         //INITIALIZE FRAGMENT SHOW DEPENDING RESTART BY MAPFRAGMENT
-        if (bundleValue != ""){
-            fm.beginTransaction().hide(active).show(fragment3).commit()
-            active = fragment3
+        if (isTablet(this)) {
+            mainFrameLayout =  mainFrameLayoutTablet
+            addFragment(MainFragment.newInstance(), mainFrameLayoutLeft)
+        } else{
+            addFragment(MainFragment.newInstance(), mainFrameLayout)
         }
     }
 
@@ -72,7 +74,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun configureFragment(){
+    /*private fun configureFragment(){
         if (isTablet(this)) mainFrameLayout = mainFrameLayoutTablet
         fm.beginTransaction().add(mainFrameLayout, fragment5, "5").hide(fragment5).commit()
         fm.beginTransaction().add(mainFrameLayout, fragment4, "4").hide(fragment4).commit()
@@ -82,7 +84,7 @@ class MainActivity : AppCompatActivity() {
             main_activity_frame_tablet.visibility = View.GONE
             fm.beginTransaction().add(mainFrameLayoutLeft, fragment1, "1").commit()
         } else fm.beginTransaction().add(mainFrameLayout, fragment1, "1").commit()
-    }
+    }*/
 
     // ---------------------
     // ACTION
@@ -92,31 +94,25 @@ class MainActivity : AppCompatActivity() {
         when (integer) {
             R.id.action_list -> {
                 displayConnection(menu!!, this, 0)
-                if (isTablet(this))main_activity_frame_tablet.visibility =  View.INVISIBLE
-                fm.beginTransaction().hide(active).show(fragment1).commit()
-                active = fragment1
-                return true
+                if (isTablet(this)){
+                    main_activity_frame_tablet.visibility =  View.INVISIBLE
+                    replaceFragment(MainFragment.newInstance(), mainFrameLayoutLeft)
+                }  else replaceFragment(MainFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_add ->{
                 displayConnection(menu!!, this, 0)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
-                fm.beginTransaction().hide(active).show(fragment2).commit()
-                active = fragment2
-                return true
+                replaceFragment(AddPropertyFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_map ->{
                 displayConnection(menu!!, this, 0)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
-                fm.beginTransaction().hide(active).show(fragment3).commit()
-                active = fragment3
-                return true
+                replaceFragment(MapViewFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_simulator -> {
                 displayConnection(menu!!, this, 0)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
-                fm.beginTransaction().hide(active).show(fragment4).commit()
-                active = fragment4
-                return true
+                replaceFragment(LoanSimulatorFragment(), mainFrameLayout)
             }
         }
         return true
@@ -126,8 +122,7 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.menu_toolbar_search -> {
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
-                fm.beginTransaction().hide(active).show(fragment5).commit()
-                active = fragment5
+                replaceFragment(SearchPropertyFragment(), mainFrameLayout)
             }
         }
         return super.onOptionsItemSelected(item)

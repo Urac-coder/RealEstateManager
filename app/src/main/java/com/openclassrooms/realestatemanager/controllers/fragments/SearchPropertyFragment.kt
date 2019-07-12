@@ -23,7 +23,7 @@ class SearchPropertyFragment: Fragment(){
     var args: List<Objects> = ArrayList()
 
     var iterator: Boolean = true
-    //lateinit var propertyViewModel: PropertyViewModel
+    lateinit var propertyViewModel: PropertyViewModel
 
     companion object {
         fun newInstance(): SearchPropertyFragment{
@@ -40,6 +40,10 @@ class SearchPropertyFragment: Fragment(){
 
         configureViewModel()
         setToolbarTitle(activity!!, "Recherche")
+
+        search_property_btn.setOnClickListener {
+            searchProperty()
+        }
     }
 
     // ---------------------
@@ -48,7 +52,7 @@ class SearchPropertyFragment: Fragment(){
 
     private fun configureViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(context!!)
-        //this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
+        this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
     }
 
     // ---------------------
@@ -56,12 +60,12 @@ class SearchPropertyFragment: Fragment(){
     // ---------------------
 
     private fun searchProperty(){
-        //this.propertyViewModel.searchProperty("SELECT * FROM Property WERE type  LIKE = maison").observe(this, Observer<List<Property>> { propertyList  -> displaySearchProperty(propertyList) })
+        this.propertyViewModel.searchProperty("Maison").observe(this, Observer<List<Property>> { propertyList  -> displaySearchProperty(propertyList) })
     }
 
     private fun displaySearchProperty(propertyList: List<Property>){
         for (property in propertyList){
-            println(property.type)
+            println(property.price)
         }
     }
 }

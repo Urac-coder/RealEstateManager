@@ -228,7 +228,7 @@
                     />
 
                 <Button
-                    android:id="@+id/add_property_btn_sale"
+                    android:id="@+id/search_property_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_property_spinner_available"

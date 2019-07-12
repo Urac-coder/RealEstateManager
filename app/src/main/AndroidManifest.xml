@@ -29,8 +29,7 @@
             android:name="com.openclassrooms.realestatemanager.controllers.activities.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,6 +48,11 @@
                 android:resource="@xml/file_path">
             </meta-data>
         </provider>
+
+        <provider
+            android:name=".provider.PropertyContentProvider"
+            android:authorities="com.openclassrooms.realestatemanager.provider"
+            android:exported="true"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

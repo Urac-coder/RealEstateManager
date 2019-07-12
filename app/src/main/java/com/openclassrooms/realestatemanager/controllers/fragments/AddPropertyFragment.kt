@@ -32,6 +32,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 import com.openclassrooms.realestatemanager.utils.*
@@ -92,6 +93,7 @@ class AddPropertyFragment : Fragment(){
             getPropertyToEdit()
             getPictureListToEdit()
             add_property_btn_sale.visibility = View.VISIBLE
+            if (!isTablet(context!!)) activity!!.activity_main_bottom_navigation.visibility = View.GONE
             setToolbarTitle(activity!!, "Modifier une propriété")
         } else{
             setToolbarTitle(activity!!, "Ajouter une propriété")
@@ -100,11 +102,12 @@ class AddPropertyFragment : Fragment(){
 
         add_property_btn_save.setOnClickListener{
             insertProperty()
-            launchMainFragment()
 
             if (propertyToEditId == 0L) {
                 displayNotificationAfterAddProperty()
+                launchMainFragment()
             } else{
+                activity!!.supportFragmentManager.popBackStack()
                 if (allowPictureDelete) {
                     for (pictureToDeleteId  in pictureToDeleteIdList){
                         this.propertyViewModel.deletePicture(pictureToDeleteId)
@@ -536,12 +539,19 @@ class AddPropertyFragment : Fragment(){
             activity!!.main_activity_frame_tablet.visibility =  View.INVISIBLE
             frameLayout = R.id.main_activity_frame_left
         }
-
-
         val mainFragment = MainFragment()
         activity!!.supportFragmentManager.beginTransaction()
                 .replace(frameLayout, mainFragment, "findThisFragment")
                 .addToBackStack(null)
                 .commit()
+    }
+
+    // ---------------------
+    // LIFE CYCLE
+    // ---------------------
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity!!.activity_main_bottom_navigation.visibility = View.VISIBLE
     }
 }
