@@ -14,10 +14,6 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
         return this.propertyDao.getProperty(propertyId)
     }
 
-    fun searchProperty(query: String): LiveData<List<Property>> {
-        return this.propertyDao.searchProperty(query)
-    }
-
     fun getAllProperty(): LiveData<List<Property>> {
         return this.propertyDao.getAllProperty()
     }

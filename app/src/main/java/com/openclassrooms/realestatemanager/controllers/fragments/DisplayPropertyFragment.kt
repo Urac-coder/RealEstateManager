@@ -18,12 +18,9 @@ import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_display_property_info.*
 import java.text.DecimalFormat
 import android.view.ViewGroup
-import com.openclassrooms.realestatemanager.utils.isTablet
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.content.ContextCompat
-import com.openclassrooms.realestatemanager.utils.Utils
-import com.openclassrooms.realestatemanager.utils.displayConnection
-import com.openclassrooms.realestatemanager.utils.setToolbarTitle
+import com.openclassrooms.realestatemanager.utils.*
 
 class DisplayPropertyFragment : Fragment() {
     lateinit var propertyViewModel: PropertyViewModel
@@ -110,7 +107,7 @@ class DisplayPropertyFragment : Fragment() {
         display_property_textView_type.text = property.type
         display_property_textView_price.text = decimalFormat.format(property.price) + "€"
         display_property_textView_cityZipCop.text = property.city + "  (" + property.zipCode + ")"
-        display_property_textView_area.text = property.area.toString() + "m2"
+        display_property_textView_area.text = property.surface.toString() + "m2"
         display_property_textView_nbRoom.text = property.nbRooms.toString()
         display_property_textView_bedroom.text = property.bedrooms.toString()
         display_property_textView_pointOfInterest.text = property.pointOfInterest

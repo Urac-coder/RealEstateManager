@@ -45,7 +45,6 @@ class LoanSimulatorFragment : Fragment() {
         setToolbarTitle(activity!!, "Simulateur de prêt")
 
         fragment_loan_simulator_seekbar_contribution.isEnabled = false
-        fragment_loan_simulator_result.visibility = View.GONE
         fragment_loan_simulator_btn.text = "Calculer"
 
         fragment_loan_simulator_editText_price.addTextChangedListener(object : TextWatcher {
@@ -78,22 +77,7 @@ class LoanSimulatorFragment : Fragment() {
         })
 
         fragment_loan_simulator_btn.setOnClickListener {
-            if (!simulationDone){
-                if (!fragment_loan_simulator_editText_price.text.isEmpty() && !fragment_loan_simulator_editText_rate.text.isEmpty() &&
-                        !fragment_loan_simulator_editText_duration.text.isEmpty()){
-
-                    manageView("doSimulation")
-                    calculationAndDisplayResult()
-                    simulationDone = true
-            } else {
-                context!!.toast("Vous devez selectionner tous les champs")
-            }
-
-        } else{
-                manageView("newSimulation")
-                simulationDone = false
-            }
-
+            calculationAndDisplayResult()
         }
     }
 
@@ -142,14 +126,10 @@ class LoanSimulatorFragment : Fragment() {
     private fun manageView(action: String){
         when(action){
             "doSimulation" -> {
-                    fragment_loan_simulator_btn.visibility = View.GONE
-                    fragment_loan_simulator_result.visibility = View.VISIBLE
-                    fragment_loan_simulator_btn.visibility = View.VISIBLE
                     fragment_loan_simulator_btn.text = "Nouvelle simulation"
             }
 
             "newSimulation" -> {
-                fragment_loan_simulator_result.visibility = View.GONE
                 fragment_loan_simulator_btn.text = "Calculer"
                 fragment_loan_simulator_editText_price.text.clear()
                 fragment_loan_simulator_editText_rate.text.clear()

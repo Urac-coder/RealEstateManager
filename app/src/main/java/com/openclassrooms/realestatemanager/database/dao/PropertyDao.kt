@@ -15,9 +15,6 @@ interface PropertyDao {
     @Query("SELECT * FROM Property WHERE id = :propertyId")
     fun getPropertyWhitCursor(propertyId: Long): Cursor
 
-    @Query("SELECT * FROM Property WHERE type = :query")
-    fun searchProperty(query: String): LiveData<List<Property>>
-
     @Query("SELECT * FROM Property")
     fun getAllProperty(): LiveData<List<Property>>
 

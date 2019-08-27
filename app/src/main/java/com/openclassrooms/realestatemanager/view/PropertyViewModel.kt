@@ -22,10 +22,6 @@ class PropertyViewModel(private val propertyDataSource: PropertyDataRepository,p
         return propertyDataSource.getProperty(propertyId)
     }
 
-    fun searchProperty(query: String): LiveData<List<Property>>{
-        return propertyDataSource.searchProperty(query)
-    }
-
     fun getAllProperty(): LiveData<List<Property>> {
         return propertyDataSource.getAllProperty()
     }

@@ -34,7 +34,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginRight="30dp"
-                android:text="100,000"
+                android:text=""
                 />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginRight="30dp"
-                android:text="230"
+                android:text=""
                 />
 
             <TextView
@@ -88,7 +88,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp"
                 android:layout_marginRight="30dp"
-                android:text="900"
+                android:text=""
                 />
 
         </RelativeLayout>

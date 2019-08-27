@@ -7,6 +7,7 @@
     android:background="@android:color/white">
 
     <ScrollView
+        android:id="@+id/search_property_input_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -33,7 +34,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:hint="Max"
+                    android:hint="Min"
                     android:inputType="number"
                     />
 
@@ -60,7 +61,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:hint="Min"
+                    android:hint="Max"
                     android:inputType="number"
                     />
 
@@ -76,14 +77,14 @@
                     android:text="Surface m²"/>
 
                 <EditText
-                    android:id="@+id/search_property_editText_areaMin"
+                    android:id="@+id/search_property_editText_surface_min"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_property_title_area"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:hint="Max"
+                    android:hint="Min"
                     android:inputType="number"
                     />
 
@@ -92,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_property_title_area"
-                    android:layout_toRightOf="@+id/search_property_editText_areaMin"
+                    android:layout_toRightOf="@+id/search_property_editText_surface_min"
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
@@ -102,11 +103,57 @@
                     />
 
                 <EditText
-                    android:id="@+id/search_property_editText_areaMax"
+                    android:id="@+id/search_property_editText_surface_max"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/search_property_title_area"
                     android:layout_toRightOf="@+id/search_property_separate_area"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Max"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_roomNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_separate_area"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Nombre de pièce minimum"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_roomNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_roomNb"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border"
+                    android:padding="10dp"
+                    android:hint="Min"
+                    android:inputType="number"
+                    />
+
+                <TextView
+                    android:id="@+id/search_property_title_bedroomNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_editText_roomNb"
+                    android:layout_marginTop="20dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Nombre de chambre minimum"/>
+
+                <EditText
+                    android:id="@+id/search_property_editText_bedroomNb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/search_property_title_bedroomNb"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
@@ -118,12 +165,12 @@
                     android:id="@+id/search_property_title_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/search_property_separate_area"
+                    android:layout_below="@+id/search_property_editText_bedroomNb"
                     android:layout_marginTop="20dp"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:text="City"/>
+                    android:text="Ville"/>
 
                 <EditText
                     android:id="@+id/search_property_editText_city"
@@ -133,6 +180,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
+                    android:inputType="textCapSentences"
                     android:hint="Paris"
                     />
 
@@ -179,6 +227,7 @@
                     android:background="@drawable/border"
                     android:padding="10dp"
                     android:hint="Ecole, commerce, parc"
+                    android:inputType="textCapSentences"
                     />
 
                 <TextView
@@ -190,7 +239,8 @@
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:text="Nombre de photos minimum"/>
+                    android:text="Nombre de photos minimum"
+                    />
 
                 <EditText
                     android:id="@+id/search_property_editText_picNb"
@@ -242,4 +292,18 @@
 
             </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/search_property_display_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/display_search"
+            layout="@layout/fragment_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </RelativeLayout>
 </LinearLayout>

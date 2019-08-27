@@ -25,30 +25,22 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.os.Environment
 import android.view.*
-import android.widget.DatePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 import com.openclassrooms.realestatemanager.utils.*
 import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_add_property_date_picker.*
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.fragment_add_property_date_picker.view.*
-import kotlinx.android.synthetic.main.fragment_display_property.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.xml.datatype.DatatypeConstants.MONTHS
 
 
 class AddPropertyFragment : Fragment(){
@@ -122,7 +114,7 @@ class AddPropertyFragment : Fragment(){
         }
 
         add_property_btn_importPicture.setOnClickListener{
-            this.choosePictureFromPhoneAndAddToList()
+            this.choosePictureFromPhone()
             pictureAction = "insert"
         }
 
@@ -141,20 +133,6 @@ class AddPropertyFragment : Fragment(){
         }
 
         return inflater.inflate(R.layout.fragment_add_property, container, false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_toolbar_in_property, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
-            R.id.menu_toolbar_search -> {
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     // ---------------------
@@ -189,6 +167,26 @@ class AddPropertyFragment : Fragment(){
                     clickOnPicture(getGoodPicture(response.id.toInt()), response.id)
                 }
     }
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar_in_property, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item?.itemId) {
+            R.id.menu_toolbar_search -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // ---------------------
+    // ACTION
+    // ---------------------
 
     private fun updatePictureList(picture: List<Picture>) {
         this.adapter.updateData(picture)
@@ -276,12 +274,16 @@ class AddPropertyFragment : Fragment(){
                 propertyAvailable,
                 Utils.getTodayDate(),
                 saleDate,
-                propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()))
+                propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()),
+                pictureList.size,
+                add_property_spinner_price.selectedItem.toString())
 
         if (propertyToEditId == 0L){
             this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
         } else{
-            this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
+            if (pictureAction == "insert"){
+                this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
+            } else this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
         }
     }
 
@@ -331,12 +333,12 @@ class AddPropertyFragment : Fragment(){
     }
 
     //IMPORT PICTURE
-    private fun choosePictureFromPhoneAndAddToList() {
+    private fun choosePictureFromPhone() {
         if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
             EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
             return
         }
-        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(i, RC_CHOOSE_PHOTO)
     }
 
@@ -367,7 +369,7 @@ class AddPropertyFragment : Fragment(){
         //ACTION
         dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
             pictureAction = "replace"
-            this.choosePictureFromPhoneAndAddToList()
+            this.choosePictureFromPhone()
             Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
         }
 
@@ -460,7 +462,7 @@ class AddPropertyFragment : Fragment(){
     private fun initInputWithPropertyToEdit(property: Property){
         add_property_spinner_type.setSelection(getGoodItemOfSpinner(property.type))
         add_property_editText_price.setText(property.price.toString())
-        add_property_editText_surface.setText(property.area.toString())
+        add_property_editText_surface.setText(property.surface.toString())
         add_property_editText_roomNumber.setText(property.nbRooms.toString())
         add_property_editText_bedrooms.setText(property.bedrooms.toString())
         add_property_editText_description.setText(property.description)

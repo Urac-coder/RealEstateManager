@@ -34,7 +34,7 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val decimalFormat = DecimalFormat("#,###,###")
 
     fun updateWithProperty(property: Property) {
-        view.main_fragment_info.text = property.type + " - " + property.area + " m²" + " - " + property.nbRooms + " rooms"
+        view.main_fragment_info.text = property.type + " - " + property.surface + " m²" + " - " + property.nbRooms + " rooms"
         view.main_fragment_city.text = property.city + " (" + property.zipCode + ")"
         view.main_fragment_price.text = decimalFormat.format(property.price) + " €"
 
