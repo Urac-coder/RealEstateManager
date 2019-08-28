@@ -25,6 +25,10 @@ class PictureDataRepository(private val pictureDao: PictureDao) {
         pictureDao.deletePicture(pictureId)
     }
 
+    fun deletePictureProperty(propertyId: Long) {
+        pictureDao.deletePicture(propertyId)
+    }
+
     // --- UPDATE ---
     fun updatePicture(picture: Picture) {
         pictureDao.updatePicture(picture)

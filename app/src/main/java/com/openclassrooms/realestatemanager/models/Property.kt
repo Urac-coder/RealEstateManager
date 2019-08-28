@@ -6,8 +6,6 @@ import androidx.room.PrimaryKey
 import android.content.ClipData.Item
 import android.content.ContentValues
 
-
-
 @Entity (tableName = "Property")
 data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
                     @ColumnInfo (name = "type") var type: String,
@@ -26,7 +24,7 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
                     @ColumnInfo (name = "saleDate") var saleDate: String,
                     @ColumnInfo (name = "realEstateAgent") var realEstateAgent: String,
                     @ColumnInfo (name = "nbOfPicture") var nbOfPicture: Int,
-                    @ColumnInfo (name = "priceUSD") var priceUSD: String) {
+                    @ColumnInfo (name = "priceUSD") var priceUSD: String)
 
     fun fromContentValues(values: ContentValues): Property {
         val property: Property = Property(0, "", 0, 0, 0, 0, "", "", "", "", 0,
@@ -51,4 +49,3 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
         if (values.containsKey("priceUSD")) property.priceUSD = values.getAsString("priceUSD")
         return property
     }
-}

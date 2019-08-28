@@ -20,4 +20,7 @@ interface PictureDao {
 
     @Query("DELETE FROM Picture WHERE id = :pictureId")
     fun deletePicture(pictureId: Long)
+
+    @Query("DELETE FROM Picture WHERE id = :propertyId")
+    fun deletePictureProperty(propertyId: Long)
 }

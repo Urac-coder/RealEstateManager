@@ -46,7 +46,7 @@ public class Utils {
      * @return
      */
     public static Boolean isInternetAvailable(){
-        Runtime runtime = Runtime.getRuntime();
+        /*Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int     exitValue = ipProcess.waitFor();
@@ -54,7 +54,7 @@ public class Utils {
         }
         catch (IOException e)          { e.printStackTrace(); }
         catch (InterruptedException e) { e.printStackTrace(); }
-
+*/
         return false;
     }
 }

@@ -62,7 +62,7 @@ class AddPropertyFragment : Fragment(){
     private var uriPictureSelected: Uri? = null
     private lateinit var picture: Picture
     private var pictureList: MutableList<Picture> = mutableListOf<Picture>()
-    private lateinit var pictureAction: String
+    private var pictureAction: String = ""
     private val REQUEST_IMAGE_CAPTURE = 1
     private val PERMISSION_REQUEST_CODE_CAPTURE: Int = 101
     private var pictureToDeleteIdList: MutableList<Long> = mutableListOf<Long>()
@@ -105,6 +105,7 @@ class AddPropertyFragment : Fragment(){
                         this.propertyViewModel.deletePicture(pictureToDeleteId)
                     }
                     allowPictureDelete = false
+                    launchMainFragment()
                 }
             }
         }
@@ -238,6 +239,12 @@ class AddPropertyFragment : Fragment(){
     // UTILS
     // ---------------------
 
+    private fun displayList(list : List<Picture>){
+        for (itemList in list){
+            println(itemList.description + ' ')
+        }
+    }
+
     private fun selectSaleDate(){
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
@@ -278,13 +285,8 @@ class AddPropertyFragment : Fragment(){
                 pictureList.size,
                 add_property_spinner_price.selectedItem.toString())
 
-        if (propertyToEditId == 0L){
-            this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
-        } else{
-            if (pictureAction == "insert"){
-                this.propertyViewModel.insertPropertyAndPicture(property, setGoodIdToPictureList(pictureList))
-            } else this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
-        }
+
+        this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
     }
 
     private fun propertyInfoEmptyString(value: String): String{
@@ -301,17 +303,10 @@ class AddPropertyFragment : Fragment(){
 
     //PICTURE
     private fun addPictureToList(description: String){
-        picture = Picture(iterator, uriPictureSelected.toString(), description, 0)
+        picture = Picture(0, uriPictureSelected.toString(), description, 0)
         pictureList.add(picture)
         updatePictureList(pictureList)
         iterator++
-    }
-
-    private fun setGoodIdToPictureList(pictureList : List<Picture>): List<Picture>{
-        for (picture in pictureList ){
-            picture.id = 0
-        }
-        return pictureList
     }
 
     private fun insertDescriptionToPictureAndAddPictureToList(){
@@ -360,6 +355,7 @@ class AddPropertyFragment : Fragment(){
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.fragment_add_property_edit_picture, null)
         dialogBuilder.setView(dialogView)
+        pictureAction = "replace"
 
         //INIT
         Glide.with(dialogView).load(pictureList[pictureId].url).into(dialogView.fragment_add_property_edit_picture_pic)
@@ -368,13 +364,11 @@ class AddPropertyFragment : Fragment(){
 
         //ACTION
         dialogView.fragment_add_property_edit_btn_importPicture.setOnClickListener {
-            pictureAction = "replace"
             this.choosePictureFromPhone()
             Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
         }
 
         dialogView.fragment_add_property_edit_btn_takePicture.setOnClickListener {
-            pictureAction = "replace"
             if (checkPermission()){ takePicture() } else requestPermission()
             Glide.with(dialogView).load(resources.getDrawable(R.drawable.click)).into(dialogView.fragment_add_property_edit_picture_pic)
         }
@@ -385,6 +379,7 @@ class AddPropertyFragment : Fragment(){
 
         //DIALOG BUTTON
         dialogBuilder.setPositiveButton("save") { dialog, id ->
+            pictureAction = "replace"
             pictureList[pictureId].description = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
             this.pictureDescription = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
             replacePicture(pictureId)

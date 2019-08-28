@@ -61,6 +61,10 @@ class PropertyViewModel(private val propertyDataSource: PropertyDataRepository,p
         executor.execute { pictureDataSource.deletePicture(pictureId) }
     }
 
+    fun deletePictureProperty(propertyId: Long) {
+        executor.execute { pictureDataSource.deletePicture(propertyId) }
+    }
+
     fun updatePicture(picture: Picture) {
         executor.execute { pictureDataSource.updatePicture(picture) }
     }

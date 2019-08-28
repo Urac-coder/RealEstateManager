@@ -26,7 +26,7 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
 
     // --- DELETE ---
     fun deleteProperty(propertyId: Long) {
-        propertyDao.deleteItem(propertyId)
+        propertyDao.deleteProperty(propertyId)
     }
 
     // --- UPDATE ---

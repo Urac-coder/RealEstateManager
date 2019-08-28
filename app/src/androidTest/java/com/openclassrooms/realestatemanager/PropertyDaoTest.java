@@ -22,9 +22,9 @@ public class PropertyDaoTest {
     // FOR DATA
     private PropertyDatabase database;
     private static long PROPERTY_ID = 1;
-    private static Property PROPERTY_DEMO = new Property(PROPERTY_ID,"Maison", 100000, 30, 14, "Super petite maisonette", "null",
-            "34 route du pont", "Ecole, Carrefour, Auchan", false, "12/04/1959", "05/08/1959",
-            "Pierre Monier");
+    private static Property PROPERTY_DEMO = new Property(PROPERTY_ID,"Maison", 100000, 30, 14, 3,"Super petite maisonette", "null",
+            "34 route du pont", "Paris",00000,"Ecole, Carrefour, Auchan", false, "12/04/1959", "05/08/1959",
+            "Pierre Monier", 0, "USD");
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();

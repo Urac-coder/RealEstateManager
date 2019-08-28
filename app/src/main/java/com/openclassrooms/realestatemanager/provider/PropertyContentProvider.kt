@@ -11,6 +11,7 @@ import androidx.annotation.Nullable
 import com.openclassrooms.realestatemanager.database.PropertyDatabase
 import androidx.room.RoomMasterTable.TABLE_NAME
 import android.content.ClipData.Item
+import com.openclassrooms.realestatemanager.models.fromContentValues
 
 class PropertyContentProvider : ContentProvider(){
 
@@ -39,23 +40,33 @@ class PropertyContentProvider : ContentProvider(){
 
     override fun insert(uri: Uri, contentValues: ContentValues?): Uri? {
 
-        /*if (context != null) {
-            val id = PropertyDatabase.getInstance(context!!)!!.propertyDao().insertProperty(fromContentValues(contentValues))
+        if (context != null) {
+            val id = PropertyDatabase.getInstance(context!!)!!.propertyDao().insertProperty(fromContentValues(contentValues!!))
             if (id != 0L) {
                 context!!.contentResolver.notifyChange(uri, null)
                 return ContentUris.withAppendedId(uri, id)
             }
-        }*/
+        }
 
         throw IllegalArgumentException("Failed to insert row into $uri")
     }
 
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun delete(uri: Uri, s: String?, strings: Array<String>?): Int {
+        if (context != null) {
+            val count: Int = PropertyDatabase.getInstance(context!!)!!.propertyDao().deleteProperty(ContentUris.parseId(uri)).toString().toInt()
+            context!!.contentResolver.notifyChange(uri, null)
+            return count
+        }
+        throw IllegalArgumentException("Failed to delete row into $uri")
     }
 
-    override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun update(uri: Uri, contentValues: ContentValues?, s: String?, strings: Array<String>?): Int {
+        if (context != null) {
+            val count = PropertyDatabase.getInstance(context!!)!!.propertyDao().updateProperty(fromContentValues(contentValues!!)).toString().toInt()
+            context!!.contentResolver.notifyChange(uri, null)
+            return count
+        }
+        throw IllegalArgumentException("Failed to update row into $uri")
     }
 }
