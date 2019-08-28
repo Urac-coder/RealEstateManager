@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.database.dao
 
 import android.content.ClipData.Item
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.openclassrooms.realestatemanager.models.Picture
@@ -20,7 +21,4 @@ interface PictureDao {
 
     @Query("DELETE FROM Picture WHERE id = :pictureId")
     fun deletePicture(pictureId: Long)
-
-    @Query("DELETE FROM Picture WHERE id = :propertyId")
-    fun deletePictureProperty(propertyId: Long)
 }

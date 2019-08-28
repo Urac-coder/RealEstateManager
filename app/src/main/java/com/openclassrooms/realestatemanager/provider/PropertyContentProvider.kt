@@ -15,9 +15,11 @@ import com.openclassrooms.realestatemanager.models.fromContentValues
 
 class PropertyContentProvider : ContentProvider(){
 
-    val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
-    val TABLE_NAME = Property::class.java.simpleName
-    val URI_ITEM = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+    companion object {
+        var AUTHORITY = "com.openclassrooms.realestatemanager.provider"
+        var TABLE_NAME = Property::class.java.simpleName
+        var URI_PROPERTY = Uri.parse("content://$AUTHORITY/$TABLE_NAME")
+    }
 
     override fun onCreate(): Boolean { return true }
 

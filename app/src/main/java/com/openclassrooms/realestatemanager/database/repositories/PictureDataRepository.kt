@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.database.repositories
 
 import android.content.ClipData.Item
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.openclassrooms.realestatemanager.database.dao.PictureDao
 import com.openclassrooms.realestatemanager.models.Picture
@@ -23,10 +24,6 @@ class PictureDataRepository(private val pictureDao: PictureDao) {
     // --- DELETE ---
     fun deletePicture(pictureId: Long) {
         pictureDao.deletePicture(pictureId)
-    }
-
-    fun deletePictureProperty(propertyId: Long) {
-        pictureDao.deletePicture(propertyId)
     }
 
     // --- UPDATE ---

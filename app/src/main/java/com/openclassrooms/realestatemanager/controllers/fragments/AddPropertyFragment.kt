@@ -106,6 +106,7 @@ class AddPropertyFragment : Fragment(){
                     }
                     allowPictureDelete = false
                     launchMainFragment()
+
                 }
             }
         }
