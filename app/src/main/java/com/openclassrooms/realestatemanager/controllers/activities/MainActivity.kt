@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         configureBottomView()
         SharedPref.init(this)
 
-        //INITIALIZE FRAGMENT SHOW DEPENDING RESTART BY MAPFRAGMENT
         if (isTablet(this)) {
             mainFrameLayout =  mainFrameLayoutTablet
             addFragment(MainFragment.newInstance(), mainFrameLayoutLeft)
@@ -115,6 +114,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // ---------------------
+    // LAUNCH
+    // ---------------------
+
+    private fun launchMainFragment() {
+        var frameLayout: Int = R.id.main_activity_frame
+        if (isTablet(this)) frameLayout = R.id.main_activity_frame_left
+
+        val fragment = MainFragment()
+
+        this.supportFragmentManager.beginTransaction()
+                .replace(frameLayout, fragment, "findThisFragment")
+                .addToBackStack(null)
+                .commit()
     }
 
     // ---------------------

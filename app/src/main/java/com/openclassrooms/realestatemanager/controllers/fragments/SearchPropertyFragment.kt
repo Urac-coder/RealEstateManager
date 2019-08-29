@@ -28,9 +28,9 @@ import java.time.LocalDate
 import java.time.Year
 import java.util.*
 
-class SearchPropertyFragment: Fragment(){
+class SearchPropertyFragment: BaseFragment(){
 
-    private lateinit var propertyViewModel: PropertyViewModel
+    //private lateinit var propertyViewModel: PropertyViewModel
     private lateinit var adapter: MainFragmentAdapter
 
     private var priceMin: Int = 0
@@ -54,16 +54,42 @@ class SearchPropertyFragment: Fragment(){
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(com.openclassrooms.realestatemanager.R.layout.fragment_search_property, container, false)
+    }*/
+
+    /*@RequiresApi(Build.VERSION_CODES.O)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //super.onViewCreated(view, savedInstanceState)
+
+        //configureViewModel()
+        configureRecyclerView()
+        configureOnClickRecyclerView()
+        setToolbarTitle(activity!!, "Recherche")
+
+        if (SharedPref.read(PREF_DEVICE, "") == "EURO"){
+            search_property_title_price.text = "Prix €"
+        } else{
+            search_property_title_price.text = "Prix $"
+        }
+
+        search_property_btn.setOnClickListener {
+            initValue()
+            getAllProperty()
+            getAllValue()
+            search_property_input_container.visibility = View.GONE
+        }
+
+        search_property_btn_date.setOnClickListener {
+            selectSaleDate()
+        }
+    }*/
+
+    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        configureViewModel()
+    override fun addToOnViewCreated() {
         configureRecyclerView()
         configureOnClickRecyclerView()
         setToolbarTitle(activity!!, "Recherche")
@@ -89,6 +115,10 @@ class SearchPropertyFragment: Fragment(){
     // ---------------------
     // CONFIGURATION
     // ---------------------
+
+    override fun getFragmentLayout(): Int {
+        return R.layout.fragment_search_property
+    }
 
     private fun configureViewModel() {
         val mViewModelFactory = Injection.provideViewModelFactory(context!!)
@@ -120,7 +150,7 @@ class SearchPropertyFragment: Fragment(){
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_toolbar, menu)
 
@@ -131,7 +161,7 @@ class SearchPropertyFragment: Fragment(){
         }
 
         super.onCreateOptionsMenu(menu, inflater)
-    }
+    }*/
 
     // ---------------------
     // UTILS

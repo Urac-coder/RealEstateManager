@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/fragment_add_property_edit_picture_pic"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/fragment_add_property_edit_picture_textView_title_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_add_property_edit_picture_pic"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="Description :"/>
+
+    <EditText
+        android:id="@+id/fragment_add_property_edit_picture_editText_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_property_edit_picture_textView_title_description"
+        android:background="@drawable/border"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:inputType="textCapSentences"/>
+
+    <TextView
+        android:id="@+id/fragment_add_property_edit_picture_textView_title_pic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_add_property_edit_picture_editText_description"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="30dp"
+        android:textSize="20dp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:text="New picture :"/>
+
+    <ImageView
+        android:id="@+id/fragment_add_property_edit_btn_importPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_below="@id/fragment_add_property_edit_picture_textView_title_pic"
+        android:text="Import picture"
+        android:padding="20dp"
+        app:srcCompat="@drawable/ic_add_picture_storage"
+        android:background="@drawable/border"/>
+
+    <ImageView
+        android:id="@+id/fragment_add_property_edit_btn_takePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/fragment_add_property_edit_btn_importPicture"
+        android:layout_below="@id/fragment_add_property_edit_picture_textView_title_pic"
+        android:text="Take picture"
+        android:padding="20dp"
+        app:srcCompat="@drawable/ic_add_picture_camera"
+        android:background="@drawable/border"/>
+
+</RelativeLayout>

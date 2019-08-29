@@ -29,12 +29,11 @@ import pub.devrel.easypermissions.EasyPermissions
 import android.content.Intent
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity
 
-class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.location.LocationListener, GoogleMap.OnMarkerClickListener{
+class MapViewFragment : BaseFragment(), OnMapReadyCallback, com.google.android.gms.location.LocationListener, GoogleMap.OnMarkerClickListener{
+
     private lateinit var mMap: GoogleMap
     private var mLocationManager: LocationManager? = null
-    internal var mMarker: Marker? = null
 
-    private lateinit var propertyViewModel: PropertyViewModel
     private lateinit var menu: Menu
 
     private val PERMS = Manifest.permission.ACCESS_FINE_LOCATION
@@ -49,15 +48,12 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        configureViewModel()
-        setToolbarTitle(activity!!, "Map")
+    override fun getFragmentLayout(): Int {
+        return R.layout.fragment_map_view
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_map_view, container, false)
 
+    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {
         rootView.mapView.onCreate(savedInstanceState)
         rootView.mapView.onResume() // needed to get the map to display immediately
 
@@ -74,11 +70,11 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
             getCurrentLocationAndZoomOn()
             getAllPropertyAndDisplayWithMarker()
         }
-
-        setHasOptionsMenu(true)
-        return rootView
     }
 
+    override fun addToOnViewCreated() {
+        setToolbarTitle(activity!!, "Map")
+    }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap!!
@@ -93,11 +89,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
     // CONFIGURATION
     // ---------------------
 
-    private fun configureViewModel() {
-        val mViewModelFactory = Injection.provideViewModelFactory(context!!)
-        this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
-    }
-
     private fun configureViewDependingConnection(view: View){
         if (Utils.isInternetAvailable(context)){
             view.fragment_map_view_container.visibility = View.VISIBLE
@@ -106,19 +97,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
             view.fragment_map_view_container.visibility = View.INVISIBLE
             view.fragment_map_view_txt_noConnextion.visibility = View.VISIBLE
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_toolbar, menu)
-
-        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
-        } else{
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     // --------------------

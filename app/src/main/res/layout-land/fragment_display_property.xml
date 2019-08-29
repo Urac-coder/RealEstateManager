@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/display_property_pic_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/display_property_pic"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:src="@drawable/specimen"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/display_property_picDescription"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:textSize="16dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:text="Vue exterieur"
+                android:alpha="0.6"
+                android:layout_above="@+id/display_property_textView_nbPicture"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_nbPicture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_pic"
+                android:text="1/3"
+                android:layout_margin="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_pic"
+                android:layout_margin="10dp"
+                android:layout_alignParentRight="true"
+                android:text="Cliquez sur l'image pour faire défiler la suivante"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_below="@+id/display_property_textView_nbPicture"
+                />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/display_property_textView_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:text="100,000,000 $"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_cityZipCop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@android:color/black"
+                android:layout_below="@+id/display_property_textView_price"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="20dp"
+                android:text="Lille (59000)"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="20dp"
+                android:textSize="16dp"
+                android:textColor="@android:color/black"
+                android:layout_marginRight="20dp"
+                android:text="House"
+                />
+
+            <include
+                android:id="@+id/fragment_display_property_info"
+                layout="@layout/fragment_display_property_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_below="@+id/display_property_textView_cityZipCop"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_alwaysAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fragment_display_property_info"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:text="The property is no longer available"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_titleRealEstateAgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_alwaysAvailable"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Agent immobilier :"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_RealEstateAgent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_alwaysAvailable"
+                android:layout_toRightOf="@id/display_property_textView_titleRealEstateAgent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="Stephan Plaza"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_titleEntryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_RealEstateAgent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Date d'entrée :"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_entryDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_RealEstateAgent"
+                android:layout_toRightOf="@id/display_property_textView_titleEntryDate"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="12/12/1999"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_titleSaleDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_entryDate"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:text="Date de vente :"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_saleDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_entryDate"
+                android:layout_toRightOf="@id/display_property_textView_titleSaleDate"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
+                android:text="02/05/2000"
+                />
+
+            <TextView
+                android:id="@+id/display_property_textView_titleDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/display_property_textView_saleDate"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="20dp"
+                android:text="Déscription"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@+id/display_property_textView_titleDescription"
+                android:text="On sait depuis longtemps que travailler avec du texte lisible et contenant du sens est source de distractions, et empêche de se concentrer sur la mise en page elle-même. L'avantage du Lorem Ipsum sur un texte générique comme 'Du texte. Du texte. Du texte.' est qu'il possède une distribution de lettres plus ou moins normale, et en tout cas comparable avec celle du français standard. De nombreuses suites logicielles de mise en page ou éditeurs de sites Web ont fait du Lorem Ipsum leur faux texte par défaut, et une recherche pour 'Lorem Ipsum' vous conduira vers de nombreux sites qui n'en sont encore qu'à leur phase de construction. Plusieurs versions sont apparues avec le temps, parfois par accident, souvent intentionnellement (histoire d'y rajouter de petits clins d'oeil, voire des phrases embarassantes)."/>
+
+            <TextView
+                android:id="@+id/display_property_textView_titleLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@+id/display_property_textView_description"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:textSize="20dp"
+                android:text="Localisation"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_below="@+id/display_property_textView_description"
+                android:layout_toRightOf="@+id/display_property_textView_titleLocation"
+                android:tint="@android:color/black"
+                app:srcCompat="@drawable/ic_location"/>
+
+            <TextView
+                android:id="@+id/display_property_textView_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_below="@+id/display_property_textView_titleLocation"
+                android:text="62 route de wierre, Longfosse"/>
+
+            <ImageView
+                android:id="@+id/display_property_map"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/display_property_textView_location"
+                android:src="@drawable/specimen_map"
+                android:scaleType="centerCrop"
+                />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/display_property_textView_titlepointOfInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:text="Points d'intérêts :"/>
+
+                <TextView
+                    android:id="@+id/display_property_textView_pointOfInterest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/display_property_textView_titlepointOfInterest"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="Ecole, Carrefour, CarWash"
+                    />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

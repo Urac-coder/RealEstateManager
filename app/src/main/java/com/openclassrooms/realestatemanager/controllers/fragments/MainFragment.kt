@@ -33,11 +33,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.openclassrooms.realestatemanager.utils.*
 
-
-class MainFragment : Fragment(){
+class MainFragment : BaseFragment(){
 
     lateinit var adapter: MainFragmentAdapter
-    lateinit var propertyViewModel: PropertyViewModel
 
     companion object {
         fun newInstance() : MainFragment{
@@ -45,31 +43,22 @@ class MainFragment : Fragment(){
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getFragmentLayout(): Int {
+        return R.layout.fragment_main
+    }
 
+    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {}
+
+    override fun addToOnViewCreated() {
         setToolbarTitle(activity!!, "Accueil")
-
-        configureViewModel()
         getAllProperty()
         configureRecyclerView()
         configureOnClickRecyclerView()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_main, container, false)
-    }
-
     // ---------------------
     // CONFIGURATION
     // ---------------------
-
-    private fun configureViewModel() {
-        val mViewModelFactory = Injection.provideViewModelFactory(context!!)
-        this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
-    }
 
     private fun configureRecyclerView() {
         this.adapter = MainFragmentAdapter()
@@ -94,19 +83,6 @@ class MainFragment : Fragment(){
         } else {
             main_fragment_addInfo.visibility = View.VISIBLE
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_toolbar, menu)
-
-        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
-        } else{
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
     // ---------------------

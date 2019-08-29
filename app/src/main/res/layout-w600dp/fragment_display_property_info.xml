@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:background="@color/gray">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/title_surface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/BLUE"
+            android:textStyle="bold"
+            android:text="SURFACE"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/display_property_textView_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_surface"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="65 m²"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/title_rooms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/BLUE"
+            android:textStyle="bold"
+            android:text="PIECE"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/display_property_textView_nbRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_rooms"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="3"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/title_bedrooms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/BLUE"
+            android:textStyle="bold"
+            android:text="CHAMBRE"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/display_property_textView_bedroom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_bedrooms"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:text="2"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

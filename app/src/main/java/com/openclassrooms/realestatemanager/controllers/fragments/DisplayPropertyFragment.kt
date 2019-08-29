@@ -54,7 +54,6 @@ class DisplayPropertyFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val bundle = this.arguments
         if (bundle != null) {
             propertyId = bundle.getLong("PROPERTY_ID", propertyId)

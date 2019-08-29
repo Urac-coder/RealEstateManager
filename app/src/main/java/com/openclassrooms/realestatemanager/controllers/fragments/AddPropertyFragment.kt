@@ -43,10 +43,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AddPropertyFragment : Fragment(){
+class AddPropertyFragment : BaseFragment(){
 
     lateinit var property: Property
-    lateinit var propertyViewModel: PropertyViewModel
     lateinit var pictureDescription: String
     lateinit var adapter: AddPropertyPictureAdapter
     private var iterator: Long = 0
@@ -74,10 +73,18 @@ class AddPropertyFragment : Fragment(){
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getFragmentLayout(): Int {
+        return R.layout.fragment_add_property
+    }
 
-        configureViewModel()
+    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {
+        val bundle = this.arguments
+        if (bundle != null) {
+            propertyToEditId = bundle.getLong(BUNDLE_PROPERTY_ID, propertyToEditId)
+        }
+    }
+
+    override fun addToOnViewCreated() {
         configureRecyclerView()
         configureOnClickRecyclerView()
 
@@ -133,24 +140,9 @@ class AddPropertyFragment : Fragment(){
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val bundle = this.arguments
-        if (bundle != null) {
-            propertyToEditId = bundle.getLong(BUNDLE_PROPERTY_ID, propertyToEditId)
-        }
-
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_add_property, container, false)
-    }
-
     // ---------------------
     // CONFIGURATION
     // ---------------------
-
-    private fun configureViewModel() {
-        val mViewModelFactory = Injection.provideViewModelFactory(context!!)
-        this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -176,37 +168,11 @@ class AddPropertyFragment : Fragment(){
                 }
     }
 
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_toolbar, menu)
-
-        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
-        } else{
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
-            R.id.menu_toolbar_search -> {
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     // ---------------------
     // ACTION
     // ---------------------
 
-    private fun updatePictureList(picture: List<Picture>) {
-        this.adapter.updateData(picture)
-
-    }
+    private fun updatePictureList(picture: List<Picture>) { this.adapter.updateData(picture) }
 
     // -------------------
     // PERMISSION
@@ -254,18 +220,11 @@ class AddPropertyFragment : Fragment(){
     // UTILS
     // ---------------------
 
-    private fun displayList(list : List<Picture>){
-        for (itemList in list){
-            println(itemList.description + ' ')
-        }
-    }
-
     private fun selectSaleDate(){
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-
 
         val datePicker = DatePickerDialog(activity, R.style.DatePickerTheme ,
                 DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -275,7 +234,6 @@ class AddPropertyFragment : Fragment(){
                     add_property_btn_sale.text = "Sold : $saleDate"
                     propertyAvailable = false
                 }, year, month, day)
-
         datePicker.show()
     }
 
