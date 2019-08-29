@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers.activities
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -24,25 +26,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private var menu: Menu? = null
 
-    /*private val fragment1: Fragment = MainFragment()
-    private val fragment2: Fragment = AddPropertyFragment()
-    private val fragment3: Fragment = MapViewFragment()
-    private val fragment4: Fragment = LoanSimulatorFragment()
-    private val fragment5: Fragment = SearchPropertyFragment()
-
-    private val fm = supportFragmentManager
-    private var active: Fragment = fragment1*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         configureToolbar()
         configureBottomView()
-        //configureFragment()
-
-        val bundle = intent.extras
-        var bundleValue: String = ""
-        if (bundle != null) bundleValue = bundle.getString("startParameter", "")
+        SharedPref.init(this)
 
         //INITIALIZE FRAGMENT SHOW DEPENDING RESTART BY MAPFRAGMENT
         if (isTablet(this)) {
@@ -70,21 +59,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_toolbar, menu)
-        displayConnection(menu!!, this, 0)
+        displayConnection(menu!!, this, 1)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_attach_money_24)
+        }
+
         return true
     }
-
-    /*private fun configureFragment(){
-        if (isTablet(this)) mainFrameLayout = mainFrameLayoutTablet
-        fm.beginTransaction().add(mainFrameLayout, fragment5, "5").hide(fragment5).commit()
-        fm.beginTransaction().add(mainFrameLayout, fragment4, "4").hide(fragment4).commit()
-        fm.beginTransaction().add(mainFrameLayout, fragment3, "3").hide(fragment3).commit()
-        fm.beginTransaction().add(mainFrameLayout, fragment2, "2").hide(fragment2).commit()
-        if (isTablet(this)) {
-            main_activity_frame_tablet.visibility = View.GONE
-            fm.beginTransaction().add(mainFrameLayoutLeft, fragment1, "1").commit()
-        } else fm.beginTransaction().add(mainFrameLayout, fragment1, "1").commit()
-    }*/
 
     // ---------------------
     // ACTION
@@ -93,24 +77,24 @@ class MainActivity : AppCompatActivity() {
     private fun updateMainFragment(integer: Int): Boolean {
         when (integer) {
             R.id.action_list -> {
-                displayConnection(menu!!, this, 0)
+                displayConnection(menu!!, this, 1)
                 if (isTablet(this)){
                     main_activity_frame_tablet.visibility =  View.INVISIBLE
                     replaceFragment(MainFragment.newInstance(), mainFrameLayoutLeft)
                 }  else replaceFragment(MainFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_add ->{
-                displayConnection(menu!!, this, 0)
+                displayConnection(menu!!, this, 1)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
                 replaceFragment(AddPropertyFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_map ->{
-                displayConnection(menu!!, this, 0)
+                displayConnection(menu!!, this, 1)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
                 replaceFragment(MapViewFragment.newInstance(), mainFrameLayout)
             }
             R.id.action_simulator -> {
-                displayConnection(menu!!, this, 0)
+                displayConnection(menu!!, this, 1)
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
                 replaceFragment(LoanSimulatorFragment(), mainFrameLayout)
             }
@@ -124,6 +108,11 @@ class MainActivity : AppCompatActivity() {
                 if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
                 replaceFragment(SearchPropertyFragment(), mainFrameLayout)
             }
+            R.id.menu_toolbar_changeDevice -> {
+                if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO") SharedPref.write(PREF_DEVICE, "USD") else SharedPref.write(PREF_DEVICE, "EURO")
+                finish()
+                startActivity(intent)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -134,6 +123,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (menu != null) displayConnection(menu!!, this, 0)
+        if (menu != null) displayConnection(menu!!, this, 1)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

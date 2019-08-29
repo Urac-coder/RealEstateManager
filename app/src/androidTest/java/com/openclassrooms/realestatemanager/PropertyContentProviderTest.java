@@ -79,7 +79,6 @@ public class PropertyContentProviderTest {
         values.put("saleDate", "04/01/1963");
         values.put("realEstateAgent", "Pierre Paul");
         values.put("nbOfPicture", "3");
-        values.put("priceUSD", "euro");
         return values;
     }
 }

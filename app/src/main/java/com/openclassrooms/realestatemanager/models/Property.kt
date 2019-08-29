@@ -23,12 +23,11 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
                     @ColumnInfo (name = "entryDate") var entryDate: String,
                     @ColumnInfo (name = "saleDate") var saleDate: String,
                     @ColumnInfo (name = "realEstateAgent") var realEstateAgent: String,
-                    @ColumnInfo (name = "nbOfPicture") var nbOfPicture: Int,
-                    @ColumnInfo (name = "priceUSD") var priceUSD: String)
+                    @ColumnInfo (name = "nbOfPicture") var nbOfPicture: Int)
 
     fun fromContentValues(values: ContentValues): Property {
         val property: Property = Property(0, "", 0, 0, 0, 0, "", "", "", "", 0,
-                                            "", false, "", "", "", 0, "")
+                                            "", false, "", "", "", 0)
 
         if (values.containsKey("type")) property.type = values.getAsString("type")
         if (values.containsKey("price")) property.price = values.getAsInteger("price")
@@ -46,6 +45,5 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
         if (values.containsKey("saleDate")) property.saleDate = values.getAsString("saleDate")
         if (values.containsKey("realEstateAgent")) property.realEstateAgent = values.getAsString("realEstateAgent")
         if (values.containsKey("nbOfPicture")) property.nbOfPicture = values.getAsInteger("nbOfPicture")
-        if (values.containsKey("priceUSD")) property.priceUSD = values.getAsString("priceUSD")
         return property
     }

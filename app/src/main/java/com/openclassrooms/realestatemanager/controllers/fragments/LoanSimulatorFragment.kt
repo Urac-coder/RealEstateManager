@@ -5,14 +5,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.SeekBar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.models.Picture
 import com.openclassrooms.realestatemanager.models.Property
+import com.openclassrooms.realestatemanager.utils.PREF_DEVICE
+import com.openclassrooms.realestatemanager.utils.SharedPref
 import com.openclassrooms.realestatemanager.utils.setToolbarTitle
 import com.openclassrooms.realestatemanager.utils.toast
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
@@ -36,6 +37,7 @@ class LoanSimulatorFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_loan_simulator, container, false)
     }
 
@@ -79,6 +81,23 @@ class LoanSimulatorFragment : Fragment() {
         fragment_loan_simulator_btn.setOnClickListener {
             calculationAndDisplayResult()
         }
+    }
+
+    // ---------------------
+    // CONFIGURATION
+    // ---------------------
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar, menu)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     // ---------------------

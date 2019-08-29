@@ -1,9 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,7 +19,6 @@ import android.content.Intent
 import android.R.attr.key
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_display_property.*
-import android.view.ViewManager
 import android.widget.FrameLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.Exception
@@ -32,7 +28,9 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.appcompat.widget.Toolbar
 import android.os.Build
+import android.view.*
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.openclassrooms.realestatemanager.utils.*
 
 
@@ -60,6 +58,7 @@ class MainFragment : Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -97,6 +96,19 @@ class MainFragment : Fragment(){
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar, menu)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     // ---------------------
     // UTILS
     // ---------------------
@@ -111,7 +123,7 @@ class MainFragment : Fragment(){
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
-        bundle.putLong("PROPERTY_ID", propertyId)
+        bundle.putLong(BUNDLE_PROPERTY_ID, propertyId)
         fragment.arguments = bundle
             activity!!.supportFragmentManager.beginTransaction()
                     .replace(frameLayout, fragment, "findThisFragment")

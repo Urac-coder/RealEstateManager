@@ -1,9 +1,11 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
+import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,16 +16,17 @@ import com.openclassrooms.realestatemanager.models.Property
 import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import kotlinx.android.synthetic.main.fragment_search_property.*
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.openclassrooms.realestatemanager.utils.ItemClickSupport
-import com.openclassrooms.realestatemanager.utils.isTablet
-import com.openclassrooms.realestatemanager.utils.setToolbarTitle
-import com.openclassrooms.realestatemanager.utils.toast
+import com.openclassrooms.realestatemanager.utils.*
 import com.openclassrooms.realestatemanager.view.adapter.MainFragmentAdapter
+import kotlinx.android.synthetic.main.fragment_add_property.*
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import java.lang.Exception
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Year
 import java.util.*
-
 
 class SearchPropertyFragment: Fragment(){
 
@@ -40,6 +43,7 @@ class SearchPropertyFragment: Fragment(){
     private var pointOfInterest: String = "null"
     private var nbPicture: Int = 0
     private var available: Boolean = true
+    private var dateMin: String = "1/1/1500"
 
     private lateinit var propertyListSecondFilter: List<Property>
     private lateinit var propertyListThirdFilter: List<Property>
@@ -51,9 +55,11 @@ class SearchPropertyFragment: Fragment(){
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(com.openclassrooms.realestatemanager.R.layout.fragment_search_property, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,11 +68,21 @@ class SearchPropertyFragment: Fragment(){
         configureOnClickRecyclerView()
         setToolbarTitle(activity!!, "Recherche")
 
+        if (SharedPref.read(PREF_DEVICE, "") == "EURO"){
+            search_property_title_price.text = "Prix €"
+        } else{
+            search_property_title_price.text = "Prix $"
+        }
+
         search_property_btn.setOnClickListener {
             initValue()
             getAllProperty()
             getAllValue()
             search_property_input_container.visibility = View.GONE
+        }
+
+        search_property_btn_date.setOnClickListener {
+            selectSaleDate()
         }
     }
 
@@ -104,9 +120,49 @@ class SearchPropertyFragment: Fragment(){
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar, menu)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
     // ---------------------
     // UTILS
     // ---------------------
+
+    private fun compareDate(date1: String, date2: String): Boolean{
+        var formatter =  SimpleDateFormat("dd/MM/yyyy")
+
+        var date1: Date = formatter.parse(date1)
+        var date2: Date = formatter.parse(date2)
+
+        val compare: Int = date1.compareTo(date2)
+        return compare < 0
+    }
+
+    private fun selectSaleDate(){
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+
+        val datePicker = DatePickerDialog(activity, R.style.DatePickerTheme ,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    var month: Int = monthOfYear + 1
+
+                    dateMin = ("$dayOfMonth/$month/$year")
+                }, year, month, day)
+
+        datePicker.show()
+    }
 
     private fun initValue(){
         priceMin = 0
@@ -144,8 +200,10 @@ class SearchPropertyFragment: Fragment(){
 
     private fun filterProperty(propertyList: List<Property>): List<Property>{
         var listToReturn: List<Property>
-        var propertyListFirstFilter = propertyList.filter { it.price  >= priceMin && it.price <= priceMax && it.surface >= surfaceMin && it.surface <=
-                surfaceMax && it.nbRooms >= minRoomNb && it.bedrooms >= minBedroomNb && it.nbOfPicture >= nbPicture && it.statusAvailable == available }
+        var propertyListFirstFilter = propertyList.filter {
+            it.price  >= priceMin && it.price <= priceMax && it.surface >= surfaceMin && it.surface <=
+                    surfaceMax && it.nbRooms >= minRoomNb && it.bedrooms >= minBedroomNb && it.nbOfPicture >= nbPicture && it.statusAvailable == available &&
+                    compareDate(dateMin, it.entryDate) }
         listToReturn = propertyListFirstFilter
 
         if (city != "null") {
@@ -171,7 +229,7 @@ class SearchPropertyFragment: Fragment(){
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
-        bundle.putLong("PROPERTY_ID", propertyId)
+        bundle.putLong(BUNDLE_PROPERTY_ID, propertyId)
         fragment.arguments = bundle
         activity!!.supportFragmentManager.beginTransaction()
                 .replace(frameLayout, fragment, "findThisFragment")

@@ -14,6 +14,18 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.openclassrooms.realestatemanager.R
 
+// ---------------------
+// CONSTANT
+// ---------------------
+
+val BUNDLE_PROPERTY_ID = "PROPERTY_ID"
+val BUNDLE_START_PARAMETER = "startParameter"
+val PREF_DEVICE = "device"
+
+// ---------------------
+// FUNCTION
+// ---------------------
+
 inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
 }
@@ -40,6 +52,7 @@ fun setToolbarTitle(activity: Activity, title: String){
 }
 
 fun displayConnection(menu: Menu, context: Context, menuItem: Int){
-    var ic: Int = if (Utils.isInternetAvailable()) R.drawable.ic_wifi_on else R.drawable.ic_wifi_off
+    var ic: Int = if (Utils.isInternetAvailable(context)) R.drawable.ic_wifi_on else R.drawable.ic_wifi_off
     menu.getItem(menuItem).icon = ContextCompat.getDrawable(context, ic)
 }
+

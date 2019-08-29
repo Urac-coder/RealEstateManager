@@ -66,19 +66,6 @@
                 android:inputType="number"
                 />
 
-                <Spinner
-                    android:id="@+id/add_property_spinner_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:layout_below="@+id/add_property_title_price"
-                    android:entries="@array/Price"
-                    android:background="@drawable/border"
-                    android:prompt="@string/propertyType"
-                    android:layout_toRightOf="@id/add_property_editText_price"
-                    android:layout_marginLeft="20dp"/>
-
             <TextView
                 android:id="@+id/add_property_title_surface"
                 android:layout_width="wrap_content"

@@ -25,6 +25,8 @@ import java.text.DecimalFormat
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.injection.ViewModelFactory
+import com.openclassrooms.realestatemanager.utils.PREF_DEVICE
+import com.openclassrooms.realestatemanager.utils.SharedPref
 import kotlinx.android.synthetic.main.fragment_display_property.*
 import java.lang.Exception
 
@@ -36,7 +38,12 @@ class MainFragmentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun updateWithProperty(property: Property) {
         view.main_fragment_info.text = property.type + " - " + property.surface + " m²" + " - " + property.nbRooms + " rooms"
         view.main_fragment_city.text = property.city + " (" + property.zipCode + ")"
-        view.main_fragment_price.text = decimalFormat.format(property.price) + " €"
+        if(SharedPref.read(PREF_DEVICE, "EURO") == "EURO"){
+            view.main_fragment_price.text = decimalFormat.format(property.price) + " €"
+        } else{
+            view.main_fragment_price.text = decimalFormat.format(property.price) + " $"
+        }
+
 
         if (property.picture != "null"){
             view.main_fragment_item_cardView.visibility = View.VISIBLE

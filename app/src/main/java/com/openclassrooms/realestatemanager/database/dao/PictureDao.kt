@@ -19,6 +19,6 @@ interface PictureDao {
     @Update
     fun updatePicture(picture: Picture)
 
-    @Query("DELETE FROM Picture WHERE id = :pictureId")
-    fun deletePicture(pictureId: Long)
+    @Query("DELETE FROM Picture WHERE url = :url")
+    fun deletePicture(url: String)
 }

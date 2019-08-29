@@ -65,7 +65,7 @@ class AddPropertyFragment : Fragment(){
     private var pictureAction: String = ""
     private val REQUEST_IMAGE_CAPTURE = 1
     private val PERMISSION_REQUEST_CODE_CAPTURE: Int = 101
-    private var pictureToDeleteIdList: MutableList<Long> = mutableListOf<Long>()
+    private var pictureToDeleteIdList: MutableList<String> = mutableListOf<String>()
     private var allowPictureDelete: Boolean = false
 
     companion object {
@@ -92,6 +92,12 @@ class AddPropertyFragment : Fragment(){
             add_property_btn_sale.visibility = View.GONE
         }
 
+        if (SharedPref.read(PREF_DEVICE, "") == "EURO"){
+            add_property_title_price.text = "Prix €"
+        } else{
+            add_property_title_price.text = "Prix $"
+        }
+
         add_property_btn_save.setOnClickListener{
             insertProperty()
 
@@ -99,15 +105,14 @@ class AddPropertyFragment : Fragment(){
                 displayNotificationAfterAddProperty()
                 launchMainFragment()
             } else{
-                activity!!.supportFragmentManager.popBackStack()
+                //activity!!.supportFragmentManager.popBackStack()
                 if (allowPictureDelete) {
                     for (pictureToDeleteId  in pictureToDeleteIdList){
                         this.propertyViewModel.deletePicture(pictureToDeleteId)
                     }
                     allowPictureDelete = false
-                    launchMainFragment()
-
                 }
+                launchMainFragment()
             }
         }
 
@@ -131,9 +136,10 @@ class AddPropertyFragment : Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = this.arguments
         if (bundle != null) {
-            propertyToEditId = bundle.getLong("PROPERTY_ID", propertyToEditId)
+            propertyToEditId = bundle.getLong(BUNDLE_PROPERTY_ID, propertyToEditId)
         }
 
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_add_property, container, false)
     }
 
@@ -166,7 +172,7 @@ class AddPropertyFragment : Fragment(){
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
                     context!!.toast(response.id.toString())
-                    clickOnPicture(getGoodPicture(response.id.toInt()), response.id)
+                    clickOnPicture(getGoodPicture(response.id.toInt()))
                 }
     }
 
@@ -174,7 +180,14 @@ class AddPropertyFragment : Fragment(){
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
-        inflater.inflate(R.menu.menu_toolbar_in_property, menu)
+        inflater.inflate(R.menu.menu_toolbar, menu)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -192,6 +205,7 @@ class AddPropertyFragment : Fragment(){
 
     private fun updatePictureList(picture: List<Picture>) {
         this.adapter.updateData(picture)
+
     }
 
     // -------------------
@@ -283,9 +297,7 @@ class AddPropertyFragment : Fragment(){
                 Utils.getTodayDate(),
                 saleDate,
                 propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()),
-                pictureList.size,
-                add_property_spinner_price.selectedItem.toString())
-
+                pictureList.size)
 
         this.propertyViewModel.insertPropertyAndPicture(property, pictureList)
     }
@@ -339,13 +351,13 @@ class AddPropertyFragment : Fragment(){
     }
 
     //EDIT PICTURE
-    private fun clickOnPicture(pictureId : Int, realId: Long){
+    private fun clickOnPicture(pictureId : Int){
         val builder = AlertDialog.Builder(context!!)
                 .setItems(arrayClickOnPicture
                 ) { dialog, which ->
                     when(which){
                         0 -> editPicture(pictureId)
-                        1 -> deletePicture(pictureId, realId)
+                        1 -> deletePicture(pictureId)
                     }
                 }
         builder.create().show()
@@ -405,10 +417,10 @@ class AddPropertyFragment : Fragment(){
         pictureList[pictureId].url = uriPictureSelected.toString()
     }
 
-    private fun deletePicture(pictureId: Int, realId: Long){
+    private fun deletePicture(pictureId: Int){
+        pictureToDeleteIdList.add(pictureList[pictureId].url)
         pictureList.removeAt(pictureId)
         adapter.notifyDataSetChanged()
-        pictureToDeleteIdList.add(realId)
         allowPictureDelete = true
     }
 
@@ -534,7 +546,7 @@ class AddPropertyFragment : Fragment(){
     private fun launchMainFragment() {
         var frameLayout: Int = R.id.main_activity_frame
         if (isTablet(context!!)) {
-            activity!!.main_activity_frame_tablet.visibility =  View.INVISIBLE
+            activity!!.main_activity_frame_tablet.visibility =  View.GONE
             frameLayout = R.id.main_activity_frame_left
         }
         val mainFragment = MainFragment()

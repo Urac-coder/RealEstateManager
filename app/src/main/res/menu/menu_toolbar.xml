@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_toolbar_changeDevice"
+        android:icon="@drawable/ic_euro_symbol_24"
+        app:showAsAction="ifRoom"
+        android:title="changeDevice"/>
+
+    <item
         android:id="@+id/menu_toolbar_connection"
         android:icon="@drawable/ic_wifi_on"
         app:showAsAction="ifRoom"

@@ -49,10 +49,15 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        configureViewModel()
+        setToolbarTitle(activity!!, "Map")
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_map_view, container, false)
 
-        configureViewModel()
         rootView.mapView.onCreate(savedInstanceState)
         rootView.mapView.onResume() // needed to get the map to display immediately
 
@@ -70,6 +75,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
             getAllPropertyAndDisplayWithMarker()
         }
 
+        setHasOptionsMenu(true)
         return rootView
     }
 
@@ -81,7 +87,6 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         askPermissionsAndShowMyLocation()
         getCurrentLocationAndZoomOn()
         getAllPropertyAndDisplayWithMarker()
-        setToolbarTitle(activity!!, "Map")
     }
 
     // ---------------------
@@ -94,13 +99,26 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
     }
 
     private fun configureViewDependingConnection(view: View){
-        if (Utils.isInternetAvailable()){
+        if (Utils.isInternetAvailable(context)){
             view.fragment_map_view_container.visibility = View.VISIBLE
             view.fragment_map_view_txt_noConnextion.visibility = View.INVISIBLE
         } else {
             view.fragment_map_view_container.visibility = View.INVISIBLE
             view.fragment_map_view_txt_noConnextion.visibility = View.VISIBLE
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_toolbar, menu)
+
+        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
+        } else{
+            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     // --------------------
@@ -203,7 +221,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
                         mMap.addMarker(MarkerOptions().position(addressToDisplay).title(property.id.toString()))
                     }
                 }catch (e: java.lang.Exception) {
-                    if (Utils.isInternetAvailable()) restartMainActivityAndStartMap() else context!!.longToast("Connexion insuffisante pour afficher les propriétées")
+                    if (Utils.isInternetAvailable(context)) restartMainActivityAndStartMap() else context!!.longToast("Connexion insuffisante pour afficher les propriétées")
                 }
             }
         }
@@ -222,7 +240,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
-        bundle.putLong("PROPERTY_ID", propertyId)
+        bundle.putLong(BUNDLE_PROPERTY_ID, propertyId)
         fragment.arguments = bundle
         activity!!.supportFragmentManager.beginTransaction()
                 .replace(frameLayout, fragment, "findThisFragment")
@@ -234,7 +252,7 @@ class MapViewFragment : Fragment(), OnMapReadyCallback, com.google.android.gms.l
         val myIntent = Intent(context, MainActivity::class.java)
         val bundle = Bundle()
 
-        bundle.putString("startParameter", "launchMap")
+        bundle.putString(BUNDLE_START_PARAMETER, "launchMap")
         myIntent.putExtras(bundle)
 
         this.startActivity(myIntent)

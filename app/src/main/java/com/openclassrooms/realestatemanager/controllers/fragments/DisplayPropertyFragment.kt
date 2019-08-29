@@ -28,6 +28,7 @@ class DisplayPropertyFragment : Fragment() {
     private val decimalFormat = DecimalFormat("#,###,###")
     private lateinit var pictureList: List<Picture>
     private var iterator: Int = 1
+    private lateinit var device : String
 
     companion object {
         fun newInstance() : DisplayPropertyFragment{
@@ -39,6 +40,7 @@ class DisplayPropertyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setToolbarTitle(activity!!, "Bien immobilier")
+        if (SharedPref.read(PREF_DEVICE, "") == "EURO") device = "€" else device = "$"
 
         configureViewModel()
         getPictureList()
@@ -105,7 +107,7 @@ class DisplayPropertyFragment : Fragment() {
         display_property_textView_description.text = property.description
         display_property_textView_location.text = property.address + ", " + property.city
         display_property_textView_type.text = property.type
-        display_property_textView_price.text = decimalFormat.format(property.price) + "€"
+        display_property_textView_price.text = decimalFormat.format(property.price) + device
         display_property_textView_cityZipCop.text = property.city + "  (" + property.zipCode + ")"
         display_property_textView_area.text = property.surface.toString() + "m2"
         display_property_textView_nbRoom.text = property.nbRooms.toString()

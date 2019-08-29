@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -45,16 +48,9 @@ public class Utils {
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return
      */
-    public static Boolean isInternetAvailable(){
-        /*Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-*/
-        return false;
+    public static Boolean isInternetAvailable(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
