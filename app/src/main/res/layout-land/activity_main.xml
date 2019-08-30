@@ -14,7 +14,7 @@
         />
 
     <FrameLayout
-        android:id="@+id/main_activity_frame"
+        android:id="@+id/main_activity_frame_land"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"

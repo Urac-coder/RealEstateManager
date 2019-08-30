@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -176,10 +177,12 @@ class DisplayPropertyFragment : Fragment() {
     // ---------------------
     private fun launchAddPropertyFragmentEditMode(propertyId: Long) {
         var frameLayout: Int = R.id.main_activity_frame
+
         if (isTablet(context!!)){
             activity!!.main_activity_frame_tablet.visibility = View.VISIBLE
             frameLayout = R.id.main_activity_frame_tablet
         }
+        if(isLandscape(context!!) && !isTablet(context!!)){ frameLayout = R.id.main_activity_frame_land }
 
         val fragment = AddPropertyFragment()
         val bundle = Bundle()

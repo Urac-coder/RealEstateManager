@@ -26,7 +26,6 @@ import java.text.DecimalFormat
 
 class LoanSimulatorFragment : Fragment() {
 
-    private var simulationDone: Boolean = false
     val decimalFormat = DecimalFormat("#,###,###")
 
 
@@ -79,13 +78,22 @@ class LoanSimulatorFragment : Fragment() {
         })
 
         fragment_loan_simulator_btn.setOnClickListener {
-            calculationAndDisplayResult()
+            if (inputNotEmpty()) calculationAndDisplayResult() else context!!.toast("Vous devez entrer les information")
         }
     }
 
     // ---------------------
     // CONFIGURATION
     // ---------------------
+
+    private fun inputNotEmpty(): Boolean{
+        var inputNotEmpty: Boolean = false
+
+        inputNotEmpty = fragment_loan_simulator_editText_price.text.toString() != "" && fragment_loan_simulator_editText_rate.text.toString() != "" &&
+                fragment_loan_simulator_editText_duration.text.toString() != ""
+
+        return inputNotEmpty
+    }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
@@ -140,22 +148,5 @@ class LoanSimulatorFragment : Fragment() {
     private fun displayProgress(value: Int){
         var displayProgress: Int = value * 1000
         fragment_loan_simulator_contribution_value.text = displayProgress.toString()
-    }
-
-    private fun manageView(action: String){
-        when(action){
-            "doSimulation" -> {
-                    fragment_loan_simulator_btn.text = "Nouvelle simulation"
-            }
-
-            "newSimulation" -> {
-                fragment_loan_simulator_btn.text = "Calculer"
-                fragment_loan_simulator_editText_price.text.clear()
-                fragment_loan_simulator_editText_rate.text.clear()
-                fragment_loan_simulator_editText_duration.text.clear()
-                fragment_loan_simulator_seekbar_contribution.progress = 0
-                fragment_loan_simulator_seekbar_contribution.isEnabled = false
-            }
-        }
     }
 }

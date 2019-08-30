@@ -21,6 +21,7 @@ import android.content.Context
 import android.provider.MediaStore
 import com.openclassrooms.realestatemanager.models.Picture
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Environment
@@ -273,8 +274,8 @@ class AddPropertyFragment : BaseFragment(){
     }
 
     //PICTURE
-    private fun addPictureToList(description: String){
-        picture = Picture(0, uriPictureSelected.toString(), description, 0)
+    private fun addPictureToList(url: String, description: String){
+        picture = Picture(0, url, description, 0)
         pictureList.add(picture)
         updatePictureList(pictureList)
         iterator++
@@ -290,7 +291,7 @@ class AddPropertyFragment : BaseFragment(){
         dialogBuilder.setPositiveButton("save") { dialog, id ->
 
             this.pictureDescription = dialogView.fragment_add_property_description_editText.text.toString()
-            addPictureToList(pictureDescription)
+            addPictureToList(uriPictureSelected.toString(), pictureDescription)
         }
         dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
 
@@ -503,10 +504,13 @@ class AddPropertyFragment : BaseFragment(){
     //LAUNCH
     private fun launchMainFragment() {
         var frameLayout: Int = R.id.main_activity_frame
+
         if (isTablet(context!!)) {
             activity!!.main_activity_frame_tablet.visibility =  View.GONE
             frameLayout = R.id.main_activity_frame_left
         }
+        if(isLandscape(context!!) && !isTablet(context!!)){ frameLayout = R.id.main_activity_frame_land }
+
         val mainFragment = MainFragment()
         activity!!.supportFragmentManager.beginTransaction()
                 .replace(frameLayout, mainFragment, "findThisFragment")

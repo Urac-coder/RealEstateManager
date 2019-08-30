@@ -54,40 +54,11 @@ class SearchPropertyFragment: BaseFragment(){
         }
     }
 
-    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(com.openclassrooms.realestatemanager.R.layout.fragment_search_property, container, false)
-    }*/
-
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //super.onViewCreated(view, savedInstanceState)
-
-        //configureViewModel()
-        configureRecyclerView()
-        configureOnClickRecyclerView()
-        setToolbarTitle(activity!!, "Recherche")
-
-        if (SharedPref.read(PREF_DEVICE, "") == "EURO"){
-            search_property_title_price.text = "Prix €"
-        } else{
-            search_property_title_price.text = "Prix $"
-        }
-
-        search_property_btn.setOnClickListener {
-            initValue()
-            getAllProperty()
-            getAllValue()
-            search_property_input_container.visibility = View.GONE
-        }
-
-        search_property_btn_date.setOnClickListener {
-            selectSaleDate()
-        }
-    }*/
-
-    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {
+    override fun getFragmentLayout(): Int {
+        return R.layout.fragment_search_property
     }
+
+    override fun addToOnCreateView(rootView: View, savedInstanceState: Bundle?) {}
 
     override fun addToOnViewCreated() {
         configureRecyclerView()
@@ -116,15 +87,6 @@ class SearchPropertyFragment: BaseFragment(){
     // CONFIGURATION
     // ---------------------
 
-    override fun getFragmentLayout(): Int {
-        return R.layout.fragment_search_property
-    }
-
-    private fun configureViewModel() {
-        val mViewModelFactory = Injection.provideViewModelFactory(context!!)
-        this.propertyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PropertyViewModel::class.java)
-    }
-
     private fun configureRecyclerView() {
         this.adapter = MainFragmentAdapter()
         this.main_fragment_recyclerView.adapter = this.adapter
@@ -149,19 +111,6 @@ class SearchPropertyFragment: BaseFragment(){
             main_fragment_addInfo.visibility = View.VISIBLE
         }
     }
-
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_toolbar, menu)
-
-        if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)
-        } else{
-            menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_attach_money_24)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }*/
 
     // ---------------------
     // UTILS
@@ -255,7 +204,9 @@ class SearchPropertyFragment: BaseFragment(){
 
     private fun launchDisplayPropertyFragment(propertyId: Long) {
         var frameLayout: Int = R.id.main_activity_frame
+
         if (isTablet(context!!)) frameLayout = R.id.main_activity_frame_right
+        if(isLandscape(context!!) && !isTablet(context!!)){ frameLayout = R.id.main_activity_frame_land }
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()

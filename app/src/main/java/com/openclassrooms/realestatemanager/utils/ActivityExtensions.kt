@@ -46,6 +46,14 @@ fun isTablet(context: Context): Boolean {
     return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
 }
 
+fun isLandscape(context: Context): Boolean {
+    return context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+}
+
+fun isPortrait(context: Context): Boolean {
+    return context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+}
+
 fun setToolbarTitle(activity: Activity, title: String){
     val toolbar: Toolbar = activity!!.findViewById<View>(R.id.toolbar) as Toolbar
     toolbar.title = title

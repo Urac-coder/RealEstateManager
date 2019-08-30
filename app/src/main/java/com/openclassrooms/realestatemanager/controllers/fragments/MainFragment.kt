@@ -96,6 +96,7 @@ class MainFragment : BaseFragment(){
     private fun launchDisplayPropertyFragment(propertyId: Long) {
         var frameLayout: Int = R.id.main_activity_frame
         if (isTablet(context!!)) frameLayout = R.id.main_activity_frame_right
+        if(isLandscape(context!!) && !isTablet(context!!)){ frameLayout = R.id.main_activity_frame_land }
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()

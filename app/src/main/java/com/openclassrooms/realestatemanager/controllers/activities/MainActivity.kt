@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers.activities
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment
 class MainActivity : AppCompatActivity() {
 
     private var mainFrameLayout: Int = R.id.main_activity_frame
+    private var mainFrameLayoutLand: Int = R.id.main_activity_frame_land
     private var mainFrameLayoutTablet: Int = R.id.main_activity_frame_tablet
     private var mainFrameLayoutLeft: Int = R.id.main_activity_frame_left
     private lateinit var toolbar: Toolbar
@@ -36,7 +38,12 @@ class MainActivity : AppCompatActivity() {
         if (isTablet(this)) {
             mainFrameLayout =  mainFrameLayoutTablet
             addFragment(MainFragment.newInstance(), mainFrameLayoutLeft)
-        } else{
+        }
+        if(isLandscape(this) && !isTablet(this)){
+            mainFrameLayout = mainFrameLayoutLand
+            addFragment(MainFragment.newInstance(), mainFrameLayoutLand)
+        }
+        if(isPortrait(this) && !isTablet(this)) {
             addFragment(MainFragment.newInstance(), mainFrameLayout)
         }
     }
@@ -104,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.menu_toolbar_search -> {
-                if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
+                //if (isTablet(this)) main_activity_frame_tablet.visibility =  View.VISIBLE
                 replaceFragment(SearchPropertyFragment(), mainFrameLayout)
             }
             R.id.menu_toolbar_changeDevice -> {
@@ -117,31 +124,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     // ---------------------
-    // LAUNCH
-    // ---------------------
-
-    private fun launchMainFragment() {
-        var frameLayout: Int = R.id.main_activity_frame
-        if (isTablet(this)) frameLayout = R.id.main_activity_frame_left
-
-        val fragment = MainFragment()
-
-        this.supportFragmentManager.beginTransaction()
-                .replace(frameLayout, fragment, "findThisFragment")
-                .addToBackStack(null)
-                .commit()
-    }
-
-    // ---------------------
     // LIFE CYCLE
     // ---------------------
 
     override fun onResume() {
         super.onResume()
         if (menu != null) displayConnection(menu!!, this, 1)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

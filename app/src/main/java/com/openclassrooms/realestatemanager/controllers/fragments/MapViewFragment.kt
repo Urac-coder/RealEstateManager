@@ -215,6 +215,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, com.google.android.g
             activity!!.main_activity_frame_tablet.visibility = View.VISIBLE
             frameLayout = com.openclassrooms.realestatemanager.R.id.main_activity_frame_tablet
         }
+        if(isLandscape(context!!) && !isTablet(context!!)){ frameLayout = R.id.main_activity_frame_land }
 
         val fragment = DisplayPropertyFragment()
         val bundle = Bundle()
