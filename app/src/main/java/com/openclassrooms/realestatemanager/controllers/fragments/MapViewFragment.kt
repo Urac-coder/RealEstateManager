@@ -63,6 +63,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, com.google.android.g
 
         rootView.fragment_map_view_txt_noConnextion.setOnClickListener {
             configureViewDependingConnection(rootView)
+            getAllPropertyAndDisplayWithMarker()
         }
 
         rootView.myLocationButton.setOnClickListener {

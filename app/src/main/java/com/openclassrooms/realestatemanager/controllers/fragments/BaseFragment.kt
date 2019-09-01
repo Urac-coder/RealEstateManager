@@ -51,6 +51,7 @@ abstract class BaseFragment : Fragment(){
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_toolbar, menu)
+        displayConnection(menu, context!!, 1)
 
         if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
             menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)

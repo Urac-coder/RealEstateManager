@@ -25,7 +25,7 @@ data class Property(@PrimaryKey (autoGenerate = true) var id: Long,
                     @ColumnInfo (name = "realEstateAgent") var realEstateAgent: String,
                     @ColumnInfo (name = "nbOfPicture") var nbOfPicture: Int)
 
-    fun fromContentValues(values: ContentValues): Property {
+fun fromContentValues(values: ContentValues): Property {
         val property: Property = Property(0, "", 0, 0, 0, 0, "", "", "", "", 0,
                                             "", false, "", "", "", 0)
 

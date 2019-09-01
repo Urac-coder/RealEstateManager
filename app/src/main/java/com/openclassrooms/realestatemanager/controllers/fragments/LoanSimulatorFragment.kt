@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.controllers.fragments
 
-import android.Manifest
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,18 +8,10 @@ import android.widget.SeekBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.models.Picture
-import com.openclassrooms.realestatemanager.models.Property
-import com.openclassrooms.realestatemanager.utils.PREF_DEVICE
-import com.openclassrooms.realestatemanager.utils.SharedPref
-import com.openclassrooms.realestatemanager.utils.setToolbarTitle
-import com.openclassrooms.realestatemanager.utils.toast
-import com.openclassrooms.realestatemanager.view.PropertyViewModel
-import com.openclassrooms.realestatemanager.view.adapter.AddPropertyPictureAdapter
+import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.fragment_loan_simulator.*
 import kotlinx.android.synthetic.main.fragment_loan_simulator_display_result.*
 import kotlinx.android.synthetic.main.fragment_loan_simulator_display_input.*
-import kotlinx.android.synthetic.main.fragment_main_item.view.*
 import java.text.DecimalFormat
 
 class LoanSimulatorFragment : Fragment() {
@@ -87,17 +77,14 @@ class LoanSimulatorFragment : Fragment() {
     // ---------------------
 
     private fun inputNotEmpty(): Boolean{
-        var inputNotEmpty: Boolean = false
-
-        inputNotEmpty = fragment_loan_simulator_editText_price.text.toString() != "" && fragment_loan_simulator_editText_rate.text.toString() != "" &&
+        return fragment_loan_simulator_editText_price.text.toString() != "" && fragment_loan_simulator_editText_rate.text.toString() != "" &&
                 fragment_loan_simulator_editText_duration.text.toString() != ""
-
-        return inputNotEmpty
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_toolbar, menu)
+        displayConnection(menu, context!!, 1)
 
         if (SharedPref.read(PREF_DEVICE, "EURO")!! == "EURO"){
             menu.getItem(0).icon = ContextCompat.getDrawable(context!!, R.drawable.ic_euro_symbol_24)

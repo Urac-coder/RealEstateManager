@@ -45,7 +45,7 @@
         android:textSize="20dp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        android:text="New picture :"/>
+        android:text="Nouvelle photo :"/>
 
     <ImageView
         android:id="@+id/fragment_add_property_edit_btn_importPicture"

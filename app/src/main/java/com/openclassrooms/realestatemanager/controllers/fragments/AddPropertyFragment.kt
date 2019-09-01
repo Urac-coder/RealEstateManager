@@ -50,7 +50,7 @@ class AddPropertyFragment : BaseFragment(){
     lateinit var pictureDescription: String
     lateinit var adapter: AddPropertyPictureAdapter
     private var iterator: Long = 0
-    private val arrayClickOnPicture = arrayOf("Edit","Delete")
+    private val arrayClickOnPicture = arrayOf("Modifier","Supprimer")
     private var propertyToEditId: Long = 0 // 0 = CREATE PROPERTY else MODIFY PROPERTY
     private var saleDate: String = "null"
     private var  propertyAvailable: Boolean = true
@@ -113,7 +113,6 @@ class AddPropertyFragment : BaseFragment(){
                 displayNotificationAfterAddProperty()
                 launchMainFragment()
             } else{
-                //activity!!.supportFragmentManager.popBackStack()
                 if (allowPictureDelete) {
                     for (pictureToDeleteId  in pictureToDeleteIdList){
                         this.propertyViewModel.deletePicture(pictureToDeleteId)
@@ -164,7 +163,6 @@ class AddPropertyFragment : BaseFragment(){
         ItemClickSupport.addTo(add_property_fragment_recyclerView, R.layout.fragment_add_property)
                 .setOnItemClickListener { recyclerView, position, v ->
                     val response = adapter.getPicture(position)
-                    context!!.toast(response.id.toString())
                     clickOnPicture(getGoodPicture(response.id.toInt()))
                 }
     }
@@ -212,6 +210,7 @@ class AddPropertyFragment : BaseFragment(){
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
                 this.uriPictureSelected = data.data
+                //saveFilePicture(data)
                 if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
             } else {context!!.toast("No picture selected")}
         }
@@ -240,6 +239,9 @@ class AddPropertyFragment : BaseFragment(){
 
     //INSERT
     private fun insertProperty(){
+        var entryDate: String = Utils.getTodayDate()
+        if(propertyToEditId != 0L){ entryDate = property.entryDate }
+
         property = Property(propertyToEditId,
                 propertyInfoEmptyString(add_property_spinner_type.selectedItem.toString()),
                 propertyInfoEmptyInt(add_property_editText_price.text.toString()),
@@ -253,7 +255,7 @@ class AddPropertyFragment : BaseFragment(){
                 propertyInfoEmptyInt(add_property_editText_zipCode.text.toString()),
                 propertyInfoEmptyString(add_property_editText_pointOfInterest.text.toString()),
                 propertyAvailable,
-                Utils.getTodayDate(),
+                entryDate,
                 saleDate,
                 propertyInfoEmptyString(add_property_editText_realEstateAgent.text.toString()),
                 pictureList.size)
@@ -300,13 +302,38 @@ class AddPropertyFragment : BaseFragment(){
     }
 
     //IMPORT PICTURE
+
     private fun choosePictureFromPhone() {
         if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
             EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
             return
         }
-        val i = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(i, RC_CHOOSE_PHOTO)
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(intent, RC_CHOOSE_PHOTO)
+    }
+
+    //TAKE PICTURE
+    private fun takePicture() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        saveFilePicture(intent)
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+
+        if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
+    }
+
+    private fun saveFilePicture(intent: Intent){
+        val file: File = createFile()
+
+        uriPictureSelected = FileProvider.getUriForFile(activity!!, "com.openclassrooms.realestatemanager.fileprovider", file)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPictureSelected)
+    }
+
+    @Throws(IOException::class)
+    private fun createFile(): File {
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
     //EDIT PICTURE
@@ -350,7 +377,7 @@ class AddPropertyFragment : BaseFragment(){
         }
 
         //DIALOG BUTTON
-        dialogBuilder.setPositiveButton("save") { dialog, id ->
+        dialogBuilder.setPositiveButton("Enregistrer") { dialog, id ->
             pictureAction = "replace"
             pictureList[pictureId].description = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
             this.pictureDescription = dialogView.fragment_add_property_edit_picture_editText_description.text.toString()
@@ -358,7 +385,7 @@ class AddPropertyFragment : BaseFragment(){
             adapter.notifyDataSetChanged()
         }
 
-        dialogBuilder.setNegativeButton("cancel") { dialog, which -> }
+        dialogBuilder.setNegativeButton("Annuler") { dialog, which -> }
 
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
@@ -381,26 +408,6 @@ class AddPropertyFragment : BaseFragment(){
         pictureList.removeAt(pictureId)
         adapter.notifyDataSetChanged()
         allowPictureDelete = true
-    }
-
-    //TAKE PICTURE
-    private fun takePicture() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        val file: File = createFile()
-
-        uriPictureSelected = FileProvider.getUriForFile(activity!!, "com.openclassrooms.realestatemanager.fileprovider", file)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPictureSelected)
-        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-
-        if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
-    }
-
-    @Throws(IOException::class)
-    private fun createFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = activity!!.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
     }
 
     //EDIT PROPERTY

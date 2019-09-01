@@ -180,7 +180,7 @@ class SearchPropertyFragment: BaseFragment(){
     private fun filterProperty(propertyList: List<Property>): List<Property>{
         var listToReturn: List<Property>
         var propertyListFirstFilter = propertyList.filter {
-            it.price  >= priceMin && it.price <= priceMax && it.surface >= surfaceMin && it.surface <=
+            it.price in priceMin..priceMax && it.surface >= surfaceMin && it.surface <=
                     surfaceMax && it.nbRooms >= minRoomNb && it.bedrooms >= minBedroomNb && it.nbOfPicture >= nbPicture && it.statusAvailable == available &&
                     compareDate(dateMin, it.entryDate) }
         listToReturn = propertyListFirstFilter
