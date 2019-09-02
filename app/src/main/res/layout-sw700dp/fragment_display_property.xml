@@ -27,6 +27,7 @@
                 android:id="@+id/display_property_pic"
                 android:layout_width="match_parent"
                 android:layout_height="270dp"
+                android:src="@drawable/specimen"
                 android:scaleType="centerCrop"/>
 
             <TextView

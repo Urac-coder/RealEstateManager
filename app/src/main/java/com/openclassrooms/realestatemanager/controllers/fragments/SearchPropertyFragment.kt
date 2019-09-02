@@ -138,6 +138,7 @@ class SearchPropertyFragment: BaseFragment(){
                     var month: Int = monthOfYear + 1
 
                     dateMin = ("$dayOfMonth/$month/$year")
+                    search_property_btn_date.text = dateMin
                 }, year, month, day)
 
         datePicker.show()

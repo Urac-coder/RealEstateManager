@@ -203,7 +203,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border"
                     android:padding="10dp"
-                    android:hint="12/04/2018"
+                    android:hint="12/04/1627"
                     android:inputType="number"
                     />
 
