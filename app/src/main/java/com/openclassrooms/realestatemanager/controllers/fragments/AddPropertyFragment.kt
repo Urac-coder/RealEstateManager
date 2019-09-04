@@ -4,12 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.injection.Injection
 import com.openclassrooms.realestatemanager.models.Property
-import com.openclassrooms.realestatemanager.view.PropertyViewModel
 import kotlinx.android.synthetic.main.fragment_add_property.*
 import androidx.lifecycle.Observer
 import android.net.Uri
@@ -21,7 +17,11 @@ import android.content.Context
 import android.provider.MediaStore
 import com.openclassrooms.realestatemanager.models.Picture
 import android.content.pm.PackageManager
-import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.media.RingtoneManager
 import android.os.Build
 import android.os.Environment
@@ -39,7 +39,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_property_description.view.*
 import kotlinx.android.synthetic.main.fragment_add_property_edit_picture.view.*
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -209,8 +211,9 @@ class AddPropertyFragment : BaseFragment(){
     private fun handleResponse(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == RC_CHOOSE_PHOTO) {
             if (resultCode == RESULT_OK) {
-                this.uriPictureSelected = data.data
-                //saveFilePicture(data)
+                uriPictureSelected = data.data
+                context!!.grantUriPermission("com.openclassrooms.realestatemanager", uriPictureSelected, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
                 if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
             } else {context!!.toast("No picture selected")}
         }
@@ -301,8 +304,7 @@ class AddPropertyFragment : BaseFragment(){
         alertDialog.show()
     }
 
-    //IMPORT PICTURE
-
+    //IMPORT PICTURE FROM DEVICE
     private fun choosePictureFromPhone() {
         if (!EasyPermissions.hasPermissions(context!!, PERMS)) {
             EasyPermissions.requestPermissions(this, "Title picture", RC_PICTURE_PERMS, PERMS)
@@ -312,17 +314,24 @@ class AddPropertyFragment : BaseFragment(){
         startActivityForResult(intent, RC_CHOOSE_PHOTO)
     }
 
-    //TAKE PICTURE
+    private fun exifToDefrees(exifOrientation: Int): Int{
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90)  return 90
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) return 180
+        if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) return 270
+        return 0
+    }
+
+    //TAKE PICTURE WITH DEVICE
     private fun takePicture() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
-        saveFilePicture(intent)
+        saveTakePicture(intent)
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
 
         if (pictureAction == "insert") insertDescriptionToPictureAndAddPictureToList()
     }
 
-    private fun saveFilePicture(intent: Intent){
+    private fun saveTakePicture(intent: Intent){
         val file: File = createFile()
 
         uriPictureSelected = FileProvider.getUriForFile(activity!!, "com.openclassrooms.realestatemanager.fileprovider", file)

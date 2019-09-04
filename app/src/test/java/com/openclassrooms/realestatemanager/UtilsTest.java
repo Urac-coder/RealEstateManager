@@ -4,6 +4,10 @@ import com.openclassrooms.realestatemanager.utils.Utils;
 
 import org.junit.Test;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.junit.Assert.*;
 
 /**
@@ -12,6 +16,10 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class UtilsTest {
+
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String todayDate = dateFormat.format(new Date());
+
     @Test
     public void convertDollarToEuro_isCorrect(){
         int dollar = 10;
@@ -26,6 +34,11 @@ public class UtilsTest {
         int result;
         result = Utils.convertEuroToDollar(euro);
         assertEquals(11, result);
+    }
+
+    @Test
+    public void getTodayDate_isCorrect(){
+        assertEquals(todayDate, Utils.getTodayDate());
     }
 
 }
